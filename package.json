@@ -1,0 +1,38 @@
+{
+  "name": "pte-track-offset-skill",
+  "version": "1.2.0",
+  "description": "PUBG Mobile(和平精英) 追踪偏移(PTE shadow 断点)抓取技能：特征码+虚表反查定位原生虚函数断点，SDK 交叉校验与全量偏移校准，一键流水线。v1.1.0 新增 RT 驱动实战 15 坑与 615 成功定版；v1.2.0 新增机器可读基线（1.38.12 实测 kTrackShootFn=0xA0FB548 / 虚表 index 843）与 export/diff 跨赛季对撞器。",
+  "license": "GPL-3.0",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "skill.json",
+    "cordis.patch.yml",
+    "prompts",
+    "references",
+    "SKILL.md",
+    "README.md",
+    "CHANGELOG.md",
+    "scripts",
+    "data",
+    "scripts-install.sh"
+  ],
+  "scripts": {
+    "harness:check": "node --check index.js"
+  },
+  "dsh": {
+    "id": "pte-track-offset-skill",
+    "name": "PTE追踪偏移抓取",
+    "version": "1.2.0",
+    "permissions": "系统提示词注入",
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}
