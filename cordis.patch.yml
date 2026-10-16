@@ -1,0 +1,9 @@
+# pte-track-offset-skill bundle patch
+# 注册本插件；插件生效后向 systemPrompt 注入触发条款+文件路径索引，
+# 全文(SKILL.md/references)保留在插件目录，AI 按需读取，不整段灌提示词。
+- insert:
+    - id: pte-track-offset-skill
+      name: 'pte-track-offset-skill'
+      config:
+        enabled: true
+        autoApplyOnStart: true
