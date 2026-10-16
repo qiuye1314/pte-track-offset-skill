@@ -1,0 +1,167 @@
+{
+  "schema": "pte-baseline/1",
+  "label": "PUBGM 1.38.12",
+  "generated_by": "export_baseline.py",
+  "target": {
+    "module": "libUE4.so",
+    "size": 381387456,
+    "md5": "e33beba15fcc01ae0e589ffea2409ee0",
+    "text_lo": "0x8FDC960",
+    "text_hi": "0x13F128B8"
+  },
+  "signature": "a240201e8140201e6040201ec0035fd6",
+  "stubs": [
+    {
+      "addr_hex": "0x0A0FB548",
+      "section": ".text",
+      "machine_code": "a240201e8140201e6040201ec0035fd6",
+      "refs": 3,
+      "indexes": [
+        843,
+        843,
+        843
+      ],
+      "entries": [
+        {
+          "slot": "0x140F1938",
+          "vtable": "0x140EFEE0",
+          "index": 843
+        },
+        {
+          "slot": "0x1422E460",
+          "vtable": "0x1422CA08",
+          "index": 843
+        },
+        {
+          "slot": "0x14436A20",
+          "vtable": "0x14434FC8",
+          "index": 843
+        }
+      ]
+    },
+    {
+      "addr_hex": "0x0BE33F44",
+      "section": ".text",
+      "machine_code": "a240201e8140201e6040201ec0035fd6",
+      "refs": 1,
+      "indexes": [
+        191
+      ],
+      "entries": [
+        {
+          "slot": "0x14821D40",
+          "vtable": "0x14821748",
+          "index": 191
+        }
+      ]
+    }
+  ],
+  "primary": {
+    "addr_hex": "0x0A0FB548",
+    "refs": 3,
+    "indexes": [
+      843,
+      843,
+      843
+    ],
+    "index_stable": true,
+    "matches_expected_index": true
+  },
+  "sdk_anchors": {
+    "Engine": "0x17719B78",
+    "Names": "0x16CA0898",
+    "ObjObjects": "0x173EE2C8",
+    "UObjectArray": "0x173EE2B8",
+    "World": "0x1771CC38"
+  },
+  "game_offsets": {
+    "ActorAction": "0x1700",
+    "ActorAimVector": "0x1164",
+    "ActorAiming": "0x1848",
+    "ActorBullets": "0x2058",
+    "ActorBulletsMax": "0x205C",
+    "ActorClassId": "0x18",
+    "ActorCoordChain": [
+      608,
+      512
+    ],
+    "ActorCoordChainAlt": [
+      1768,
+      2612
+    ],
+    "ActorCoordZ": "0x208",
+    "ActorFeature": "0x3B9C",
+    "ActorFiring": "0x2750",
+    "ActorHeight": "0x10BC",
+    "ActorHeldWeapon": "0xDD0",
+    "ActorHp": "0x1060",
+    "ActorHpMax": "0x1068",
+    "ActorInVehicle": "0x1310",
+    "ActorIsAI": "0xB94",
+    "ActorIsAIPro": "0xB9C",
+    "ActorIsHuman": "0xB50",
+    "ActorKillCount": "0x2C",
+    "ActorKillPtr": "0x2988",
+    "ActorName": "0xAF8",
+    "ActorRotator": "0x1A8",
+    "ActorTeam": "0xB78",
+    "ActorThrowableId": "0x794",
+    "ActorUid": "0xB20",
+    "ActorWeaponPtr": "0x1170",
+    "BoneArray": "0x848",
+    "BoneArrayOld": "0x838",
+    "BoxItemCount": "0xCD8",
+    "BoxOpenState": "0x270",
+    "CameraPtr": "0x680",
+    "CameraWorldPos": "0x650",
+    "CameraYaw": "0x670",
+    "ControllerFov": "0x688",
+    "ControllerPtr": "0x60C8",
+    "CoordChainBackup": "0x1CC",
+    "CrosshairX": "0x600",
+    "CrosshairY": "0x604",
+    "FNameChunk": "0x4000",
+    "FNameNameOff": "0xC",
+    "GNameAnchor": "0x16CA0898",
+    "ItemMaterialId": "0x66C",
+    "MatchPlayerCount": "0x141C",
+    "MatchRealPlayerCount": "0xD9C",
+    "MatchTeamCount": "0x148C",
+    "MatrixAnchor": "0x176E6EE0",
+    "MatrixMid": "0x20",
+    "MatrixOffset": "0x270",
+    "MeshArray": "0x658",
+    "ObjectStride": "0x8",
+    "PhysXInstance": "0x16BAE798",
+    "PhysXInstanceFallback": "0x16B08F10",
+    "PhysXRigidActors": "0x2568",
+    "PhysXShapeManager": "0x2430",
+    "SelfChain": [
+      192,
+      136,
+      48,
+      13632
+    ],
+    "SmokeState": "0xA60",
+    "ThrowableComponent": "0x33B0",
+    "ThrowableConfig": "0x130",
+    "ThrowableExplodeTime": "0x88C",
+    "TrackShootFn": "0xA0FB548",
+    "VehicleFuel": "0x21C",
+    "VehicleFuelMax": "0x218",
+    "VehicleHp": "0x1F8",
+    "VehicleHpMax": "0x1F4",
+    "VehiclePtr": "0xC00",
+    "VersionTag": "PUBGM 1.38 (offsets dump, 2026-10)",
+    "WeaponBulletSpd": "0x15D4",
+    "WeaponCurrent": "0x990",
+    "WeaponPropPage": "0xC80",
+    "WeaponRecoilX": "0x1ED8",
+    "WeaponRecoilY": "0x1EE4",
+    "WorldAnchor": "0x1771CC38",
+    "WorldGameState": "0xAD8",
+    "WorldLevel": "0xB8",
+    "WorldObjectArray": "0xA0",
+    "WorldObjectCount": "0xA8"
+  }
+}

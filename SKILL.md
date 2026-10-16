@@ -3,7 +3,7 @@ name: pte-track-offset-mobile
 description: PUBG Mobile(和平精英) 追踪偏移(PTE shadow 子弹追踪)抓取与 SDK 反查方法论：从 libUE4.so 用特征码+虚表反查定位原生虚函数断点，用 UE4Dump SDK 交叉校验 build 一致性并校准全量字段偏移，一键流水线拉so→抓偏移→回填→NDK编译。当用户要「抓追踪偏移」「PTE追踪」「漏打追踪断点」「和平精英1.38偏移」「用SDK找偏移」「CalShoot地址」「kTrackShootFn」「子弹追踪怎么实现」或提到 com.tencent.tmgp.pubgmhd 追踪/断点/shadow/810/811/812 时使用。
 whenToUse: 用户要在一款 UE4 手游上抓「追踪类断点偏移」（原生虚函数，不在 SDK 反射表里）、要用现成 SDK 校准字段偏移、要把偏移抓取接进自动构建流水线、或问「SDK 能不能找到某个偏移」时。
 metadata:
-  version: 1.0.0
+  version: 1.1.0
   author: 老大
   upstream: PUBG Mobile 1.38.12 (com.tencent.tmgp.pubgmhd) 追踪外挂源码逆向 + UE4Dump SDK 对照
   dshHome: /root/.dsh/skills/pte-track-offset-mobile
@@ -225,9 +225,10 @@ static_assert(sizeof(HOOK_STATUS) == 72, "HookStatus ABI");
 
     1) 特征码命中数应为 1~2（多于 3 说明特征码太宽）
     2) 虚表槽 index 在多个虚表间应一致（同一基类多子类）
-    3) SDK 锚点一致数 >= 3（5/5 最佳）
-    4) 编译 ok=51 bad=0
-    5) 产物 file 输出 aarch64 PIE executable
+    3) 直接调用数应为 0（不是 0 说明命中的不是纯虚表派发的桩）
+    4) SDK 锚点一致数 >= 3（5/5 最佳）
+    5) 编译 ok=51 bad=0
+    6) 产物 file 输出 aarch64 PIE executable
 
 ## 八、跨游戏适配
 
@@ -237,4 +238,51 @@ static_assert(sizeof(HOOK_STATUS) == 72, "HookStatus ABI");
 - **锚点期望值**：REF 字典换成该游戏的已知锚点
 - **包名/模块名**：com.tencent.tmgp.pubgmhd / libUE4.so → 目标游戏
 
-方法不变：**特征码扫 → 虚表反查 → SDK 校验 → 回填 → 编译**。
+方法不变：**特征码扫 → 虚表反查 → SDK 校验 → 导出基线 → 对撞 → 回填 → 编译**。
+
+## 九、v1.1.0 新增：机器可读基线 + 跨版本对撞
+
+v1.0.0 的缺口是「抓完就算完了」——新赛季来了只能重抓再拿眼睛比。
+v1.1.0 把结果落成 JSON，对撞交给脚本。
+
+### 已验证基线（PUBGM 1.38.12）
+
+    kTrackShootFn   = 0xA0FB548
+    特征码          = a240201e8140201e6040201ec0035fd6   .text 命中 2 处
+    虚表槽          = 0x140F1938 / 0x1422E460 / 0x14436A20
+    虚表基址        = 0x140EFEE0 / 0x1422CA08 / 0x14434FC8
+    槽 index        = 843 / 843 / 843      （三表一致 = 基类虚函数）
+    直接调用数      = 0                    （纯虚表间接派发）
+    备选桩          = 0xBE33F44（index 191，1 表）
+    SDK 锚点        = 5/5 一致
+    so 指纹         = 381,387,456 字节 / md5 e33beba15fcc01ae0e589ffea2409ee0
+    字段校准        = OK 20 / MOVE 6 / 存疑 2 / 丢失 0
+
+### 两条命令适配新赛季
+
+    # 1) 导出新基线（只读）
+    python3 scripts/export_baseline.py libUE4_new.so --sdk-dir <新SDK> --offsets <新Offsets.h> --label "PUBGM 1.40" --out baseline_new.json
+
+    # 2) 与基线对撞
+    python3 scripts/diff_baseline.py --base data/baseline_1.38.12.json --new baseline_new.json
+
+对撞输出直接给：so 是否变、kTrackShootFn 新值、**虚表 index 是否重排**、
+锚点一致数、逐字段偏移差异（带字节增减）、行动清单。
+
+### 判读规则（对撞结果怎么看）
+
+| 对撞结果 | 含义 | 要做的事 |
+|---|---|---|
+| so md5 相同 | 没更新 | 什么都不用改 |
+| kTrackShootFn 变、index 仍 843 | 只挪了地址，虚表结构没动 | 换一行值即可，风险低 |
+| index 不再是 843 或多表不一致 | **基类虚表重排** | 选靶/骨骼链全部复核 |
+| 命中数 = 0 | 桩被内联/改写 | 走虚表兜底：找第 843 槽指向的 4 指令小函数 |
+| 锚点 < 3/5 | build 差异大 | 重新 dump SDK 再做语义校准 |
+| 字段偏移大量变化 | 只换桩不够 | 按差异表逐字段替换 |
+
+### 铁律
+
+- 偏移值**绑定 so 指纹**。换了 so 不重抓，就是把上一个版本的值当新的用。
+- 对撞器**只读**，不会替你写 Offsets.h。改完自己跑 build_gateway.sh 验证。
+- 别把 .bss 里的锚点读出 0 当 bug —— 那些静态槽是运行时才填的。
+

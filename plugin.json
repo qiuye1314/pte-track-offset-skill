@@ -1,0 +1,72 @@
+{
+  "name": "pte-track-offset-plugin",
+  "version": "1.1.0",
+  "kind": "skill+toolkit",
+  "title": "PTE 追踪偏移抓取与跨版本对撞",
+  "author": "老大",
+  "target": {
+    "package": "com.tencent.tmgp.pubgmhd",
+    "module": "libUE4.so",
+    "game": "PUBG Mobile / 和平精英",
+    "engine": "UE4"
+  },
+  "baseline": {
+    "label": "PUBGM 1.38.12",
+    "versionName": "1.38.12",
+    "versionCode": 15910,
+    "so_size": 381387456,
+    "so_md5": "e33beba15fcc01ae0e589ffea2409ee0",
+    "text_lo": "0x8FDC960",
+    "text_hi": "0x13F128B8",
+    "kTrackShootFn": "0xA0FB548",
+    "signature": "a240201e8140201e6040201ec0035fd6",
+    "vtable_slots": [
+      "0x140F1938",
+      "0x1422E460",
+      "0x14436A20"
+    ],
+    "vtable_bases": [
+      "0x140EFEE0",
+      "0x1422CA08",
+      "0x14434FC8"
+    ],
+    "vtable_index": 843,
+    "vtable_refs": 3,
+    "direct_calls": 0,
+    "alt_stub": "0xBE33F44",
+    "sdk_anchor_match": "5/5",
+    "exported_constants": 77,
+    "calibration": {
+      "OK": 20,
+      "MOVE": 6,
+      "SUSPECT": 2,
+      "LOST": 0
+    }
+  },
+  "entrypoints": {
+    "grab": "scripts/ue4_track_tool.py",
+    "export": "scripts/export_baseline.py",
+    "diff": "scripts/diff_baseline.py",
+    "pipeline": "scripts/build_gateway.sh",
+    "install": "scripts/scripts-install.sh"
+  },
+  "data": [
+    "data/baseline_1.38.12.json",
+    "data/PTE_BASELINE_1.38.12.md"
+  ],
+  "references": [
+    "references/offset_grab_procedure.md",
+    "references/sdk_usage.md",
+    "references/pitfalls.md",
+    "references/rt_pte_615_success.md",
+    "references/rt_pte_pitfalls_full.md"
+  ],
+  "readonly_by_default": true,
+  "writes_project_files": false,
+  "includes_binary": false,
+  "requires": {
+    "python3": ">=3.8",
+    "ndk": "仅 build_gateway.sh 需要"
+  },
+  "changelog": "CHANGELOG.md"
+}
