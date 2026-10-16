@@ -1,0 +1,21 @@
+{
+  "id": "pte-track-offset-skill",
+  "name": "PTE追踪偏移抓取",
+  "version": "1.2.0",
+  "trigger": [
+    "追踪偏移",
+    "PTE追踪",
+    "漏打追踪",
+    "追踪断点",
+    "kTrackShootFn",
+    "CalShoot",
+    "子弹追踪",
+    "和平精英偏移",
+    "虚表843",
+    "615",
+    "617"
+  ],
+  "auto_apply": false,
+  "persona_file": "prompts/trigger.md",
+  "badge": "PTE追踪偏移 v1.2.0"
+}

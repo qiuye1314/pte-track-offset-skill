@@ -1,10 +1,11 @@
-# PTE 追踪偏移插件 v1.1.0
+# PTE 追踪偏移插件 v1.2.0
 
 把「PUBG Mobile 追踪偏移怎么抓」从玄学变成**一条命令可复现 + 可跨版本对撞**的插件。
 
 - 目标：com.tencent.tmgp.pubgmhd（和平精英 / PUBGM），UE4 + libUE4.so
 - 产物：追踪断点偏移 kTrackShootFn + 全量字段偏移基线（机器可读 JSON）
 - v1.1.0 关键增量：**机器可读基线 + 新赛季自动对撞器**
+- v1.2.0 关键增量：**完整插件形态 + 常驻极小（1499 字节）+ 全文按需展开，零重启**
 
 ---
 
@@ -21,6 +22,35 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 | SDK 的间接价值 | 校验 build 一致性（5 个锚点），决定字段偏移能不能直接用 |
 
 ---
+
+## 〇·五、注入形态与开关（v1.2.0 核心设计）
+
+**装得完整，但默认只占一根细线。**
+
+| 注入段 | order | 默认 | 字节 |
+|---|---|---|---|
+| `pte-track-offset-skill:trigger` | 152 | 永远注入 | **1499** |
+| `pte-track-offset-skill:full-index` | 153 | 关（`config.detail=false`） | 7778（开启才计） |
+
+两个工具始终注册，不占提示词：
+
+- **`pte_track_doc`** —— 20 个 section 按需取全文。需要方法论/坑表/基线时调它，**不用重启**。
+  首选 `section="index"`（158 行完整作业索引）。
+- **`pte_track_status`** —— 回报版本、注入槽位、常驻字节数、基线摘要。
+  「装了像没装」时先调它核对第一现场。
+
+开关三档：
+
+```text
+① 默认（推荐）  : 常驻 1499B，全文按需     —— 现在就是这个状态
+② 全文常驻      : config.detail=true，重启生效，多占 7778B
+③ 彻底关掉      : node_modules/pte-track-offset-skill.disabled 放一个空文件
+                 （与 ue4-esp-porting-skill / laoda-hermes-dsha 同一禁用机制）
+                 或从 profiles/web/package.json 的 bundles 里移除该条目
+```
+
+注册现状：已在 `/root/.dsh/profiles/web/package.json` 的 dependencies + bundles（第 15 个），
+`node_modules` 软链已建，`skill.json` 已提供（badge: PTE追踪偏移 v1.2.0）。
 
 ## 一、当前基线（已实测验证）
 
@@ -60,10 +90,18 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 | data/baseline_1.38.12.json | ★新增：1.38.12 基线（77 项常量 + 桩指纹 + 锚点） |
 | data/PTE_BASELINE_1.38.12.md | 人读版基线报告 |
 | references/ | 5 份拆解文档（抓取流程 / 坑集 / 615 成功记录 / SDK 用法 / 坑全表） |
+| prompts/trigger.md | ★v1.2.0 常驻细线（唯一每轮开销，1499 字节） |
+| prompts/pte-track-offset-skill.md | 158 行完整作业索引（按需，不常驻） |
+| skill.json | 技能清单（触发词 / badge），DSH 发现用 |
 
 ---
 
 ## 三、用法
+
+### 0. 在对话里（最常用）
+
+说「抓 PTE 追踪偏移」/「新赛季怎么适配」即可 —— 常驻细线已让任何对话一开口就知道有这能力，
+需要细节时我会自己调 `pte_track_doc(section="index")` 取全文，你不用做任何开关操作。
 
 ### A. 只抓偏移（纯读，不动任何工程文件）
 

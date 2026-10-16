@@ -1,9 +1,41 @@
 {
   "name": "pte-track-offset-plugin",
-  "version": "1.1.0",
-  "kind": "skill+toolkit",
+  "version": "1.2.0",
+  "kind": "dsh-plugin (skill+toolkit)",
   "title": "PTE 追踪偏移抓取与跨版本对撞",
   "author": "老大",
+  "installedAt": "/root/.dsh/plugin-src/pte-track-offset-skill",
+  "skillAt": "/root/.dsh/skills/pte-track-offset-mobile",
+  "registration": {
+    "profile": "/root/.dsh/profiles/web/package.json",
+    "inDependencies": true,
+    "inBundles": true,
+    "bundleIndex": 15,
+    "nodeModulesLink": "node_modules/pte-track-offset-skill -> ../../../plugin-src/pte-track-offset-skill",
+    "patchReload": "startup（改动需重启 Harness 才进系统提示词）"
+  },
+  "injection": {
+    "resident": {
+      "section": "pte-track-offset-skill:trigger",
+      "order": 152,
+      "always": true,
+      "bytes": 1499,
+      "file": "prompts/trigger.md"
+    },
+    "optional": {
+      "section": "pte-track-offset-skill:full-index",
+      "order": 153,
+      "default": "off",
+      "enableBy": "config.detail=true + 重启",
+      "bytes": 7778,
+      "file": "prompts/pte-track-offset-skill.md"
+    },
+    "tools": [
+      "pte_track_doc (20 sections, 按需取全文)",
+      "pte_track_status (版本/注入/字节/基线自查)"
+    ],
+    "hardOff": "node_modules/pte-track-offset-skill.disabled 空文件，或从 bundles 移除"
+  },
   "target": {
     "package": "com.tencent.tmgp.pubgmhd",
     "module": "libUE4.so",
@@ -48,25 +80,22 @@
     "export": "scripts/export_baseline.py",
     "diff": "scripts/diff_baseline.py",
     "pipeline": "scripts/build_gateway.sh",
-    "install": "scripts/scripts-install.sh"
+    "install": "scripts-install.sh"
   },
-  "data": [
-    "data/baseline_1.38.12.json",
-    "data/PTE_BASELINE_1.38.12.md"
-  ],
-  "references": [
-    "references/offset_grab_procedure.md",
-    "references/sdk_usage.md",
-    "references/pitfalls.md",
-    "references/rt_pte_615_success.md",
-    "references/rt_pte_pitfalls_full.md"
-  ],
   "readonly_by_default": true,
   "writes_project_files": false,
   "includes_binary": false,
   "requires": {
     "python3": ">=3.8",
     "ndk": "仅 build_gateway.sh 需要"
+  },
+  "verification": {
+    "node_check_index": "pass",
+    "mock_ctx_apply": "pass (两个分支 + 两个工具 + 未知 section 报错分支)",
+    "load_via_node_modules_link": "pass",
+    "prompt_path_refs_missing": 0,
+    "doctool_path_refs_missing": 0,
+    "diff_tool_regressions": 3
   },
   "changelog": "CHANGELOG.md"
 }
