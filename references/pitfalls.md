@@ -110,3 +110,92 @@ if arr.itemsize != 4:
 0xBE33F44 → 1 个虚表引用，槽 index=191          → 独立类
 ```
 **结论**：优先取**虚表引用多、槽位一致**的那个。再用外挂源码里的已知值交叉确认。
+
+## 9. ARM64 Bionic TLS 对齐（链接后必踩）
+
+**现象**：链接成功但真机报：
+
+```
+error: "./G.sh": executable's TLS segment is underaligned:
+       alignment is 8 (skew 0), needs to be at least 64 for ARM64 Bionic
+```
+
+**原因**：Bionic linker 检查 PT_TLS 段两项：
+1. `p_align >= 64`
+2. `p_vaddr % p_align == 0`（否则报 `skew N`）
+
+lld 默认给 TLS 段 `p_align=8`，且 `p_vaddr` 不保证 64 对齐。
+**编译参数改不动它**（`-Wl,-z,max-page-size`、`--rosegment` 都无效）。
+
+**解决**：链接后直接 patch ELF 程序头：
+
+```python
+# PT_TLS = 7; 程序头字段偏移：
+#   p_offset +0x08, p_vaddr +0x10, p_filesz +0x20, p_memsz +0x28, p_align +0x30
+# TLS 段 p_filesz=0（无文件内容）→ 改 p_vaddr 安全
+p_align = 64
+if p_vaddr % 64 != 0:
+    p_vaddr = (p_vaddr + 63) & ~63
+    p_offset += (p_vaddr - old_vaddr)   # filesz=0 时同步即可
+```
+
+脚本：`/sdcard/Download/lsrael漏打陀螺仪/fix_tls.py`
+
+```bash
+python3 fix_tls.py G_PTE.sh
+# 输出: align: 0x8 -> 0x40 / vaddr: 0xA92E60 -> 0xA92E80 (+32)
+```
+
+验证：
+```bash
+llvm-readelf -l G_PTE.sh | grep TLS
+# TLS  ... 0xa92e80 ... R   0x40     <- align 0x40 且 vaddr 对齐
+```
+
+## 10. 链接时的其它坑
+
+**`undefined symbol: sizet`**
+原工程 `绘制.cpp` 有个死代码 `InjectFunction` 引用 `extern int sizet;` 但无人定义，
+靠 `--gc-sections` + `-ffunction-sections` 裁掉。手工链接时若没开分段裁减就会报错。
+兜底：
+```bash
+echo 'int sizet = 0;' > /tmp/sizet_stub.c
+clang --target=aarch64-linux-android21 --sysroot=$SR -c /tmp/sizet_stub.c -o /tmp/sizet_stub.o
+# 链接时带上 /tmp/sizet_stub.o
+```
+
+**`-lvulkan` 找不到**
+NDK sysroot 里 vulkan 在 API 24+，默认 target 21 找不到。指定路径：
+```bash
+VK=$SR/usr/lib/aarch64-linux-android/34
+clang++ ... -L$VK ... -lvulkan
+```
+
+**段布局对齐原版**
+用 `-Wl,--rosegment` 让 R 段独立，与 ndk-build 产物段布局一致：
+```
+原版: LOAD(R) / LOAD(RX) / LOAD(RW) / LOAD(RW) + TLS
+加 --rosegment 后一致
+```
+
+## 11. 完整链接命令（实测可用）
+
+```bash
+TC=/opt/ndk/android-ndk-aide/toolchains/llvm/prebuilt/linux-arm
+SR=$TC/sysroot
+VK=$SR/usr/lib/aarch64-linux-android/34
+ALL=$(find obj -name '*.o' ! -name '*.o.d' | tr '\n' ' ')
+
+$TC/bin/clang++ --target=aarch64-linux-android21 --sysroot=$SR \
+  -fuse-ld=lld -static-libstdc++ \
+  -Wl,--gc-sections -Wl,--as-needed -Wl,--strip-all \
+  -Wl,--rosegment -Wl,-z,max-page-size=16384 \
+  -L$VK -o G.sh $ALL /tmp/sizet_stub.o \
+  jni/lib/libembree3.a jni/lib/libsys.a jni/lib/libmath.a \
+  jni/lib/libtasking.a jni/lib/libsimd.a jni/lib/liblexers.a \
+  jni/lib/driver.a jni/lib/libcrypto.a jni/lib/libssl.a \
+  -llog -landroid -lEGL -lGLESv1_CM -lGLESv2 -lGLESv3 -lvulkan -lz -ldl
+
+python3 fix_tls.py G.sh   # 必须
+```
+
