@@ -2,15 +2,15 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-// pte-track-offset-skill v1.2.0
+// pte-track-offset-skill v1.3.0
 //
 // 设计：装得完整，常驻极小。
 //   - 常驻只注入 prompts/trigger.md（一根细线：能力+触发词+基线+怎么展开）
-//   - 158 行完整作业索引 prompts/pte-track-offset-skill.md 默认不进提示词，
+//   - 完整作业索引 prompts/pte-track-offset-skill.md 默认不进提示词，
 //     需要时调 pte_track_doc(section="index") 取，零重启
 //   - config.detail = true 时才把完整索引也常驻注入（要重启才生效）
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PLUGIN_VERSION = "1.2.0";
+const PLUGIN_VERSION = "1.3.0";
 
 // DSH 的提示词插值引擎会把非内置变量的连续花括号当损坏引用抛出
 // "malformed prompt variable reference"，这里做无害化转义（与 laoda-hermes-dsha 同一手法）。
@@ -32,6 +32,10 @@ const BASELINE = JSON.parse(
   readFileSync(join(__dirname, "data/baseline_1.38.12.json"), "utf8")
 );
 
+const BASELINE_IGCE = JSON.parse(
+  readFileSync(join(__dirname, "data/baseline_igce_4.7.3.json"), "utf8")
+);
+
 const SECTIONS = {
   index: "prompts/pte-track-offset-skill.md",
   skill: "SKILL.md",
@@ -43,6 +47,8 @@ const SECTIONS = {
   rt_success: "references/rt_pte_615_success.md",
   baseline: "data/PTE_BASELINE_1.38.12.md",
   baseline_json: "data/baseline_1.38.12.json",
+  igce_baseline: "data/PTE_BASELINE_IGCE_4.7.3.md",
+  igce_baseline_json: "data/baseline_igce_4.7.3.json",
   export: "scripts/export_baseline.py",
   diff: "scripts/diff_baseline.py",
   script: "scripts/pte_track_find.py",
@@ -64,7 +70,7 @@ function makeDocTool() {
   return {
     name: "pte_track_doc",
     description:
-      "按需读取 PTE 追踪偏移插件全文（不常驻提示词）。section: index(完整作业索引,首选) | skill(主方法论) | baseline(1.38.12基线报告) | baseline_json(机器可读基线) | export(基线导出器源码) | diff(新赛季对撞器源码) | rt_pitfalls【必读RT驱动15坑】 | rt_success(615成功定版) | sop | sdk | pitfalls | script | grabber | align | fixtable | verify | pipeline | readme | changelog | plugin。",
+      "按需读取 PTE 追踪偏移插件全文（不常驻提示词）。section: index(完整作业索引,首选) | skill(主方法论) | baseline(1.38.12基线报告) | baseline_json(机器可读基线) | igce_baseline(IGCE 4.7.3实战报告) | igce_baseline_json(IGCE机器可读基线) | export(基线导出器源码) | diff(新赛季对撞器源码) | rt_pitfalls【必读RT驱动15坑】 | rt_success(615成功定版) | sop | sdk | pitfalls | script | grabber | align | fixtable | verify | pipeline | readme | changelog | plugin。",
     parameters: {
       type: "object",
       properties: {
@@ -114,6 +120,22 @@ function makeStatusTool(cfg) {
           Buffer.byteLength(TRIGGER_TEXT, "utf8") +
           (cfg.detail === true ? Buffer.byteLength(FULL_INDEX_TEXT, "utf8") : 0),
         onDemandBytes: Buffer.byteLength(FULL_INDEX_TEXT, "utf8"),
+        baselines: [
+          {
+            label: BASELINE.label,
+            kTrackShootFn: BASELINE.primary && BASELINE.primary.addr_hex,
+            vtableIndexes: BASELINE.primary && BASELINE.primary.indexes,
+            soMd5: BASELINE.target && BASELINE.target.md5,
+            soSize: BASELINE.target && BASELINE.target.size,
+          },
+          {
+            label: BASELINE_IGCE.label,
+            kTrackShootFn: BASELINE_IGCE.primary && BASELINE_IGCE.primary.addr_hex,
+            vtableIndexes: BASELINE_IGCE.primary && BASELINE_IGCE.primary.indexes,
+            soMd5: BASELINE_IGCE.target && BASELINE_IGCE.target.md5,
+            soSize: BASELINE_IGCE.target && BASELINE_IGCE.target.size,
+          },
+        ],
         baseline: {
           label: BASELINE.label,
           kTrackShootFn: BASELINE.primary && BASELINE.primary.addr_hex,

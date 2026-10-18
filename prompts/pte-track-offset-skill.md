@@ -14,6 +14,8 @@
 - 抓取脚本(带回填): __PLUGIN_DIR__/scripts/ue4_track_tool.py
 - **基线报告(1.38.12实测)**: __PLUGIN_DIR__/data/PTE_BASELINE_1.38.12.md
 - **机器可读基线**: __PLUGIN_DIR__/data/baseline_1.38.12.json
+- **基线报告(IGCE 4.7.3实战)**: __PLUGIN_DIR__/data/PTE_BASELINE_IGCE_4.7.3.md
+- **机器可读基线(IGCE 4.7.3)**: __PLUGIN_DIR__/data/baseline_igce_4.7.3.json
 - **基线导出器**: __PLUGIN_DIR__/scripts/export_baseline.py
 - **新赛季对撞器**: __PLUGIN_DIR__/scripts/diff_baseline.py
 - 偏移校准: __PLUGIN_DIR__/scripts/sdk_offset_align.py · offset_fix_table.py · sdk_verify2.py
@@ -56,6 +58,24 @@ SDK 锚点 = 5/5 一致（Names 0x16CA0898 / World 0x1771CC38 / Engine 0x17719B7
 ```
 
 **这条值只在上面那个 md5 的 so 上成立。** 游戏一更新就必须重抓——重抓不是失败，是常态。
+
+## 已验证基线（IGCE PUBG Mobile 4.7.3 · com.tencent.igce · 别重复扫描）
+
+```
+kTrackShootFn = 0x06235980
+  形状 = adrp x8,#0xf4ad000 / ldr x8,[x8,#0x458] / ldp s0,s1,[x8] / ldr s2,[x8,#8] / ret
+  语义 = 读 GOT 全局坐标对象返回 float3（不再读影子寄存器！）
+  坐标对象 = GOT 0xf4ad458 → 运行时 bss 0xF849E00（12 字节 float x/y/z）
+  虚表槽 = 84 个；index 843 × 7（继承旧版槽位）
+  唯一调用点 = 0x07997CF0（blr [x8,#0x1A58]）；直接调用数 = 0
+  机器码 c8930490 082d42f9 0005402d 020940bd c0035fd6
+  SDK = 百川 4.7.3（@BCHOOK6）
+  so 指纹 = 258,683,048 字节 / md5 0f7dda2d235b98cdd40d1b93c3746602
+  驱动适配 = 挂 810 断点照旧；坐标注入改写全局坐标对象（写 0xF849E00 或改 GOT 0xf4ad458），不再改 s3/s4/s5
+```
+
+**IGCE 4.7.3 教训**：编译器全面 LDR 化，旧 fmov 特征码 0 命中、纯搬移桩不存在；
+追踪桩变成「读全局坐标对象」，驱动注入必须同步改；index 843 虚表继承仍在。
 
 ## 模式C：跨赛季对撞（v1.2.0 · 新赛季适配就走这条）
 

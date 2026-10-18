@@ -3,7 +3,7 @@ name: pte-track-offset-mobile
 description: PUBG Mobile(和平精英) 追踪偏移(PTE shadow 子弹追踪)抓取与 SDK 反查方法论：从 libUE4.so 用特征码+虚表反查定位原生虚函数断点，用 UE4Dump SDK 交叉校验 build 一致性并校准全量字段偏移，一键流水线拉so→抓偏移→回填→NDK编译。当用户要「抓追踪偏移」「PTE追踪」「漏打追踪断点」「和平精英1.38偏移」「用SDK找偏移」「CalShoot地址」「kTrackShootFn」「子弹追踪怎么实现」或提到 com.tencent.tmgp.pubgmhd 追踪/断点/shadow/810/811/812 时使用。
 whenToUse: 用户要在一款 UE4 手游上抓「追踪类断点偏移」（原生虚函数，不在 SDK 反射表里）、要用现成 SDK 校准字段偏移、要把偏移抓取接进自动构建流水线、或问「SDK 能不能找到某个偏移」时。
 metadata:
-  version: 1.2.0
+  version: 1.3.0
   author: 老大
   upstream: PUBG Mobile 1.38.12 (com.tencent.tmgp.pubgmhd) 追踪外挂源码逆向 + UE4Dump SDK 对照
   dshHome: /root/.dsh/skills/pte-track-offset-mobile
@@ -257,6 +257,25 @@ v1.1.0 把结果落成 JSON，对撞交给脚本。
     SDK 锚点        = 5/5 一致
     so 指纹         = 381,387,456 字节 / md5 e33beba15fcc01ae0e589ffea2409ee0
     字段校准        = OK 20 / MOVE 6 / 存疑 2 / 丢失 0
+
+### 已验证基线（IGCE PUBG Mobile 4.7.3 · com.tencent.igce）
+
+    kTrackShootFn   = 0x06235980
+    特征码          = c8930490082d42f90005402d020940bdc0035fd6（旧 fmov 特征码已失效）
+    指令            = adrp x8,#0xf4ad000 / ldr x8,[x8,#0x458] / ldp s0,s1,[x8] / ldr s2,[x8,#8] / ret
+    形状            = 读 GOT 全局坐标对象返回 float3（不再读影子寄存器！）
+    坐标对象        = GOT 0xf4ad458 → 运行时 bss 0xF849E00（12 字节 float x/y/z）
+    虚表槽          = 84 个；index 843 × 7（继承旧版槽位）
+    唯一调用点      = 0x07997CF0（blr [x8,#0x1A58]）
+    直接调用数      = 0
+    SDK             = 百川 4.7.3（@BCHOOK6），锚点语义与 UE4Dump 不同
+    so 指纹         = 258,683,048 字节 / md5 0f7dda2d235b98cdd40d1b93c3746602
+    驱动适配        = 挂 810 断点照旧；坐标注入改写全局坐标对象（写 0xF849E00 或改 GOT 0xf4ad458），不再改 s3/s4/s5
+
+**IGCE 4.7.3 三条实战教训（2026-10-18）：**
+1. **编译器全面 LDR 化** —— 旧 fmov 纯搬移桩在这版 0 命中，`mov v16b` 向量搬移也全无虚表引用。
+2. **追踪桩从"搬影子寄存器"变成"读全局坐标对象"** —— 驱动注入方式必须跟着改，否则断点命中但坐标写不进。
+3. **index 843 虚表继承仍在** —— 特征码失效时，先扫「adrp 大全局页 + ldr GOT + ldp/ldr s0,s1,s2 + ret」形状，再用 index 843 兜底确认。
 
 ### 两条命令适配新赛季
 

@@ -1,5 +1,27 @@
 # 变更记录
 
+## 1.3.0
+
+**第二条已验证基线：IGCE PUBG Mobile 4.7.3（com.tencent.igce）实战回填。**
+
+### 新基线（2026-10-18 实战）
+- `kTrackShootFn = 0x06235980`：读 GOT 全局坐标对象返回 float3 的 getter，
+  虚表 index 843 × 7（继承旧版槽位），84 个虚表槽引用，唯一调用点 0x07997CF0。
+- 坐标对象：GOT 槽 0xf4ad458 → 运行时 bss 0xF849E00（12 字节 float x/y/z）。
+- 驱动适配变化：挂 810 断点照旧，但**坐标注入从"改 s3/s4/s5 影子寄存器"改为
+  "写全局坐标对象"**（写 0xF849E00 或改 GOT 0xf4ad458）。
+- 新增文件：`data/PTE_BASELINE_IGCE_4.7.3.md`、`data/baseline_igce_4.7.3.json`。
+
+### 实战教训（写进 SKILL.md + prompts 索引）
+1. 编译器全面 LDR 化：旧 fmov 特征码 0 命中，纯搬移桩不存在。
+2. 追踪桩从"搬影子寄存器"变成"读全局坐标对象"，驱动注入必须同步改。
+3. index 843 虚表继承仍在，特征码失效时走「adrp 大全局页 + ldr GOT + ldp/ldr」形状扫 + index 843 兜底。
+
+### 脚本/工具
+- 抓取工具链新增 numpy 向量化扫描器（`np_getter2.py` 思路）与短函数全量反汇编法，
+  应对 getter 形状被编译器改写的场景。
+- prompts 索引与 SKILL.md 均挂入新基线，`pte_track_doc` 的 baseline 段仍按需读取。
+
 ## 1.2.0
 
 **装得完整，常驻极小。** 插件形态补齐（注册进 profile + skill.json + node_modules link），
