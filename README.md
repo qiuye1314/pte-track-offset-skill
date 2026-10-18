@@ -184,7 +184,7 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 - 偏移值绑定具体 so 指纹，换了 so 必须重抓 —— 这正是 C 节对撞流程的用途。
 ---
 
-## 八、权衡利弊（Trade-offs & Design Decisions）
+## 八、作者权衡利弊（Trade-offs & Design Decisions）
 
 这一节把每个「为什么这么选」摊开说，连代价一起列。README 不当宣传页，当决策账本。
 
