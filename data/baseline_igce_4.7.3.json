@@ -1,0 +1,1094 @@
+{
+  "schema": "pte-baseline/1",
+  "label": "IGCE PUBG Mobile 4.7.3 (com.tencent.igce)",
+  "generated_by": "pte-track-offset-skill 实战回填",
+  "target": {
+    "package": "com.tencent.igce",
+    "version": "4.7.3 / 21635",
+    "module": "libUE4.so",
+    "size": 258683048,
+    "md5": "0f7dda2d235b98cdd40d1b93c3746602",
+    "text_lo": "0x5E18000",
+    "text_hi": "0xDA0BCB0"
+  },
+  "signature": "c8930490082d42f90005402d020940bdc0035fd6 (旧 fmov 特征码已失效: a240201e8140201e6040201ec0035fd6)",
+  "stubs": [
+    {
+      "addr_hex": "0x06235980",
+      "section": ".text",
+      "machine_code": "c8930490082d42f90005402d020940bdc0035fd6",
+      "insns": [
+        "adrp x8, #0xf4ad000",
+        "ldr x8, [x8, #0x458]",
+        "ldp s0, s1, [x8]",
+        "ldr s2, [x8, #8]",
+        "ret"
+      ],
+      "shape": "读 GOT 全局坐标对象 (0xf4ad458 -> 运行时 0xF849E00) 返回 float3",
+      "refs": 84,
+      "indexes": [
+        104,
+        674,
+        681,
+        685,
+        686,
+        689,
+        704,
+        710,
+        781,
+        783,
+        785,
+        787,
+        789,
+        790,
+        791,
+        792,
+        794,
+        795,
+        797,
+        805,
+        806,
+        808,
+        811,
+        813,
+        815,
+        817,
+        818,
+        819,
+        820,
+        821,
+        822,
+        823,
+        826,
+        843,
+        844,
+        845,
+        847,
+        848,
+        850,
+        852,
+        853,
+        857,
+        860,
+        861,
+        862,
+        1262,
+        1344
+      ],
+      "primary_index": 843,
+      "primary_index_count": 7,
+      "call_sites": [
+        "0x07997CF0 (blr [x8,#0x1A58], 传 s0/s1)"
+      ],
+      "direct_calls": 0,
+      "write_targets": [
+        "GOT 0xf4ad458 (改指向驱动内存坐标结构)",
+        "bss 0xF849E00 (12 字节 float x/y/z)"
+      ],
+      "entries": [
+        {
+          "slot": "0xDA84000",
+          "vtable": "0xDA829D0",
+          "index": 710
+        },
+        {
+          "slot": "0xDA86758",
+          "vtable": "0xDA85158",
+          "index": 704
+        },
+        {
+          "slot": "0xDA94AA0",
+          "vtable": "0xDA92330",
+          "index": 1262
+        },
+        {
+          "slot": "0xDA9ED98",
+          "vtable": "0xDA9D888",
+          "index": 674
+        },
+        {
+          "slot": "0xDAA0958",
+          "vtable": "0xDA9F0F0",
+          "index": 781
+        },
+        {
+          "slot": "0xDAA9D98",
+          "vtable": "0xDAA8888",
+          "index": 674
+        },
+        {
+          "slot": "0xDB68450",
+          "vtable": "0xDB68110",
+          "index": 104
+        },
+        {
+          "slot": "0xDB6FD78",
+          "vtable": "0xDB6E808",
+          "index": 686
+        },
+        {
+          "slot": "0xDB7E5D0",
+          "vtable": "0xDB7D048",
+          "index": 689
+        },
+        {
+          "slot": "0xDB80A18",
+          "vtable": "0xDB7F4A8",
+          "index": 686
+        },
+        {
+          "slot": "0xDB82EA8",
+          "vtable": "0xDB81940",
+          "index": 685
+        },
+        {
+          "slot": "0xDB96C48",
+          "vtable": "0xDB94248",
+          "index": 1344
+        },
+        {
+          "slot": "0xDC30510",
+          "vtable": "0xDC2EBE8",
+          "index": 805
+        },
+        {
+          "slot": "0xDC32840",
+          "vtable": "0xDC30F00",
+          "index": 808
+        },
+        {
+          "slot": "0xDC344F0",
+          "vtable": "0xDC32BB0",
+          "index": 808
+        },
+        {
+          "slot": "0xDC36188",
+          "vtable": "0xDC34860",
+          "index": 805
+        },
+        {
+          "slot": "0xDC481F0",
+          "vtable": "0xDC46968",
+          "index": 785
+        },
+        {
+          "slot": "0xDC49DB8",
+          "vtable": "0xDC48530",
+          "index": 785
+        },
+        {
+          "slot": "0xDC4C680",
+          "vtable": "0xDC4AD98",
+          "index": 797
+        },
+        {
+          "slot": "0xDC4E2A8",
+          "vtable": "0xDC4C9C0",
+          "index": 797
+        },
+        {
+          "slot": "0xDC54AB8",
+          "vtable": "0xDC53190",
+          "index": 805
+        },
+        {
+          "slot": "0xDC59658",
+          "vtable": "0xDC57CB8",
+          "index": 820
+        },
+        {
+          "slot": "0xDC5BD78",
+          "vtable": "0xDC5A4F0",
+          "index": 785
+        },
+        {
+          "slot": "0xDC60CD8",
+          "vtable": "0xDC5F420",
+          "index": 791
+        },
+        {
+          "slot": "0xDC629F0",
+          "vtable": "0xDC61078",
+          "index": 815
+        },
+        {
+          "slot": "0xDC64700",
+          "vtable": "0xDC62D60",
+          "index": 820
+        },
+        {
+          "slot": "0xDC6A100",
+          "vtable": "0xDC68878",
+          "index": 785
+        },
+        {
+          "slot": "0xDC6C928",
+          "vtable": "0xDC6AF58",
+          "index": 826
+        },
+        {
+          "slot": "0xDC6E568",
+          "vtable": "0xDC6CC98",
+          "index": 794
+        },
+        {
+          "slot": "0xDC70E98",
+          "vtable": "0xDC6F5F0",
+          "index": 789
+        },
+        {
+          "slot": "0xDC74250",
+          "vtable": "0xDC728C0",
+          "index": 818
+        },
+        {
+          "slot": "0xDC75F68",
+          "vtable": "0xDC745F0",
+          "index": 815
+        },
+        {
+          "slot": "0xDC78370",
+          "vtable": "0xDC769E8",
+          "index": 817
+        },
+        {
+          "slot": "0xDC7BC10",
+          "vtable": "0xDC7A368",
+          "index": 789
+        },
+        {
+          "slot": "0xDC8A038",
+          "vtable": "0xDC88710",
+          "index": 805
+        },
+        {
+          "slot": "0xE582658",
+          "vtable": "0xE57FC58",
+          "index": 1344
+        },
+        {
+          "slot": "0xE641418",
+          "vtable": "0xE63FB90",
+          "index": 785
+        },
+        {
+          "slot": "0xE643288",
+          "vtable": "0xE641A10",
+          "index": 783
+        },
+        {
+          "slot": "0xE6468F8",
+          "vtable": "0xE645038",
+          "index": 792
+        },
+        {
+          "slot": "0xE6A1098",
+          "vtable": "0xE69FB50",
+          "index": 681
+        },
+        {
+          "slot": "0xE738768",
+          "vtable": "0xE736DB8",
+          "index": 822
+        },
+        {
+          "slot": "0xE73B350",
+          "vtable": "0xE739A20",
+          "index": 806
+        },
+        {
+          "slot": "0xE73D0F0",
+          "vtable": "0xE73B690",
+          "index": 844
+        },
+        {
+          "slot": "0xE73FEB8",
+          "vtable": "0xE73E458",
+          "index": 844
+        },
+        {
+          "slot": "0xE743AD0",
+          "vtable": "0xE742028",
+          "index": 853
+        },
+        {
+          "slot": "0xE746058",
+          "vtable": "0xE744718",
+          "index": 808
+        },
+        {
+          "slot": "0xE74C1C0",
+          "vtable": "0xE74A768",
+          "index": 843
+        },
+        {
+          "slot": "0xE755918",
+          "vtable": "0xE753E30",
+          "index": 861
+        },
+        {
+          "slot": "0xE7577B0",
+          "vtable": "0xE755CC0",
+          "index": 862
+        },
+        {
+          "slot": "0xE75A560",
+          "vtable": "0xE758B08",
+          "index": 843
+        },
+        {
+          "slot": "0xE75C3E8",
+          "vtable": "0xE75A908",
+          "index": 860
+        },
+        {
+          "slot": "0xE75F208",
+          "vtable": "0xE75D768",
+          "index": 852
+        },
+        {
+          "slot": "0xE767DA8",
+          "vtable": "0xE766330",
+          "index": 847
+        },
+        {
+          "slot": "0xE76A150",
+          "vtable": "0xE7686D0",
+          "index": 848
+        },
+        {
+          "slot": "0xE76E668",
+          "vtable": "0xE76CBF0",
+          "index": 847
+        },
+        {
+          "slot": "0xE770900",
+          "vtable": "0xE76EF98",
+          "index": 813
+        },
+        {
+          "slot": "0xE772528",
+          "vtable": "0xE770C70",
+          "index": 791
+        },
+        {
+          "slot": "0xE774338",
+          "vtable": "0xE7728D8",
+          "index": 844
+        },
+        {
+          "slot": "0xE777050",
+          "vtable": "0xE7756F8",
+          "index": 811
+        },
+        {
+          "slot": "0xE778C48",
+          "vtable": "0xE7773C0",
+          "index": 785
+        },
+        {
+          "slot": "0xE781C58",
+          "vtable": "0xE7801D8",
+          "index": 848
+        },
+        {
+          "slot": "0xE785018",
+          "vtable": "0xE783768",
+          "index": 790
+        },
+        {
+          "slot": "0xE78D9A8",
+          "vtable": "0xE78C0D0",
+          "index": 795
+        },
+        {
+          "slot": "0xE78FFA8",
+          "vtable": "0xE78E4E0",
+          "index": 857
+        },
+        {
+          "slot": "0xE791CB8",
+          "vtable": "0xE790390",
+          "index": 805
+        },
+        {
+          "slot": "0xE794BB0",
+          "vtable": "0xE793208",
+          "index": 821
+        },
+        {
+          "slot": "0xE7968A8",
+          "vtable": "0xE794EF0",
+          "index": 823
+        },
+        {
+          "slot": "0xE798580",
+          "vtable": "0xE796BE8",
+          "index": 819
+        },
+        {
+          "slot": "0xE79F7B0",
+          "vtable": "0xE79DD48",
+          "index": 845
+        },
+        {
+          "slot": "0xE7A4148",
+          "vtable": "0xE7A26F0",
+          "index": 843
+        },
+        {
+          "slot": "0xE7A6788",
+          "vtable": "0xE7A4F00",
+          "index": 785
+        },
+        {
+          "slot": "0xE7A9170",
+          "vtable": "0xE7A7718",
+          "index": 843
+        },
+        {
+          "slot": "0xE7AAE40",
+          "vtable": "0xE7A9518",
+          "index": 805
+        },
+        {
+          "slot": "0xE7B5070",
+          "vtable": "0xE7B37D8",
+          "index": 787
+        },
+        {
+          "slot": "0xE7B6E08",
+          "vtable": "0xE7B53B0",
+          "index": 843
+        },
+        {
+          "slot": "0xE7B9C28",
+          "vtable": "0xE7B8160",
+          "index": 857
+        },
+        {
+          "slot": "0xE7BCAD0",
+          "vtable": "0xE7BB068",
+          "index": 845
+        },
+        {
+          "slot": "0xE7C0968",
+          "vtable": "0xE7BEEC0",
+          "index": 853
+        },
+        {
+          "slot": "0xE7C8970",
+          "vtable": "0xE7C6EE0",
+          "index": 850
+        },
+        {
+          "slot": "0xE7CC450",
+          "vtable": "0xE7CA9F8",
+          "index": 843
+        },
+        {
+          "slot": "0xE7CE250",
+          "vtable": "0xE7CC7F8",
+          "index": 843
+        },
+        {
+          "slot": "0xE7D1020",
+          "vtable": "0xE7CF5A8",
+          "index": 847
+        },
+        {
+          "slot": "0xE7D3E40",
+          "vtable": "0xE7D23E0",
+          "index": 844
+        },
+        {
+          "slot": "0xE85D718",
+          "vtable": "0xE85BC98",
+          "index": 848
+        }
+      ],
+      "idx843_entries": [
+        {
+          "slot": "0xE74C1C0",
+          "vtable": "0xE74A768",
+          "index": 843
+        },
+        {
+          "slot": "0xE75A560",
+          "vtable": "0xE758B08",
+          "index": 843
+        },
+        {
+          "slot": "0xE7A4148",
+          "vtable": "0xE7A26F0",
+          "index": 843
+        },
+        {
+          "slot": "0xE7A9170",
+          "vtable": "0xE7A7718",
+          "index": 843
+        },
+        {
+          "slot": "0xE7B6E08",
+          "vtable": "0xE7B53B0",
+          "index": 843
+        },
+        {
+          "slot": "0xE7CC450",
+          "vtable": "0xE7CA9F8",
+          "index": 843
+        },
+        {
+          "slot": "0xE7CE250",
+          "vtable": "0xE7CC7F8",
+          "index": 843
+        }
+      ]
+    }
+  ],
+  "primary": {
+    "addr_hex": "0x06235980",
+    "section": ".text",
+    "machine_code": "c8930490082d42f90005402d020940bdc0035fd6",
+    "insns": [
+      "adrp x8, #0xf4ad000",
+      "ldr x8, [x8, #0x458]",
+      "ldp s0, s1, [x8]",
+      "ldr s2, [x8, #8]",
+      "ret"
+    ],
+    "shape": "读 GOT 全局坐标对象 (0xf4ad458 -> 运行时 0xF849E00) 返回 float3",
+    "refs": 84,
+    "indexes": [
+      104,
+      674,
+      681,
+      685,
+      686,
+      689,
+      704,
+      710,
+      781,
+      783,
+      785,
+      787,
+      789,
+      790,
+      791,
+      792,
+      794,
+      795,
+      797,
+      805,
+      806,
+      808,
+      811,
+      813,
+      815,
+      817,
+      818,
+      819,
+      820,
+      821,
+      822,
+      823,
+      826,
+      843,
+      844,
+      845,
+      847,
+      848,
+      850,
+      852,
+      853,
+      857,
+      860,
+      861,
+      862,
+      1262,
+      1344
+    ],
+    "primary_index": 843,
+    "primary_index_count": 7,
+    "call_sites": [
+      "0x07997CF0 (blr [x8,#0x1A58], 传 s0/s1)"
+    ],
+    "direct_calls": 0,
+    "write_targets": [
+      "GOT 0xf4ad458 (改指向驱动内存坐标结构)",
+      "bss 0xF849E00 (12 字节 float x/y/z)"
+    ],
+    "entries": [
+      {
+        "slot": "0xDA84000",
+        "vtable": "0xDA829D0",
+        "index": 710
+      },
+      {
+        "slot": "0xDA86758",
+        "vtable": "0xDA85158",
+        "index": 704
+      },
+      {
+        "slot": "0xDA94AA0",
+        "vtable": "0xDA92330",
+        "index": 1262
+      },
+      {
+        "slot": "0xDA9ED98",
+        "vtable": "0xDA9D888",
+        "index": 674
+      },
+      {
+        "slot": "0xDAA0958",
+        "vtable": "0xDA9F0F0",
+        "index": 781
+      },
+      {
+        "slot": "0xDAA9D98",
+        "vtable": "0xDAA8888",
+        "index": 674
+      },
+      {
+        "slot": "0xDB68450",
+        "vtable": "0xDB68110",
+        "index": 104
+      },
+      {
+        "slot": "0xDB6FD78",
+        "vtable": "0xDB6E808",
+        "index": 686
+      },
+      {
+        "slot": "0xDB7E5D0",
+        "vtable": "0xDB7D048",
+        "index": 689
+      },
+      {
+        "slot": "0xDB80A18",
+        "vtable": "0xDB7F4A8",
+        "index": 686
+      },
+      {
+        "slot": "0xDB82EA8",
+        "vtable": "0xDB81940",
+        "index": 685
+      },
+      {
+        "slot": "0xDB96C48",
+        "vtable": "0xDB94248",
+        "index": 1344
+      },
+      {
+        "slot": "0xDC30510",
+        "vtable": "0xDC2EBE8",
+        "index": 805
+      },
+      {
+        "slot": "0xDC32840",
+        "vtable": "0xDC30F00",
+        "index": 808
+      },
+      {
+        "slot": "0xDC344F0",
+        "vtable": "0xDC32BB0",
+        "index": 808
+      },
+      {
+        "slot": "0xDC36188",
+        "vtable": "0xDC34860",
+        "index": 805
+      },
+      {
+        "slot": "0xDC481F0",
+        "vtable": "0xDC46968",
+        "index": 785
+      },
+      {
+        "slot": "0xDC49DB8",
+        "vtable": "0xDC48530",
+        "index": 785
+      },
+      {
+        "slot": "0xDC4C680",
+        "vtable": "0xDC4AD98",
+        "index": 797
+      },
+      {
+        "slot": "0xDC4E2A8",
+        "vtable": "0xDC4C9C0",
+        "index": 797
+      },
+      {
+        "slot": "0xDC54AB8",
+        "vtable": "0xDC53190",
+        "index": 805
+      },
+      {
+        "slot": "0xDC59658",
+        "vtable": "0xDC57CB8",
+        "index": 820
+      },
+      {
+        "slot": "0xDC5BD78",
+        "vtable": "0xDC5A4F0",
+        "index": 785
+      },
+      {
+        "slot": "0xDC60CD8",
+        "vtable": "0xDC5F420",
+        "index": 791
+      },
+      {
+        "slot": "0xDC629F0",
+        "vtable": "0xDC61078",
+        "index": 815
+      },
+      {
+        "slot": "0xDC64700",
+        "vtable": "0xDC62D60",
+        "index": 820
+      },
+      {
+        "slot": "0xDC6A100",
+        "vtable": "0xDC68878",
+        "index": 785
+      },
+      {
+        "slot": "0xDC6C928",
+        "vtable": "0xDC6AF58",
+        "index": 826
+      },
+      {
+        "slot": "0xDC6E568",
+        "vtable": "0xDC6CC98",
+        "index": 794
+      },
+      {
+        "slot": "0xDC70E98",
+        "vtable": "0xDC6F5F0",
+        "index": 789
+      },
+      {
+        "slot": "0xDC74250",
+        "vtable": "0xDC728C0",
+        "index": 818
+      },
+      {
+        "slot": "0xDC75F68",
+        "vtable": "0xDC745F0",
+        "index": 815
+      },
+      {
+        "slot": "0xDC78370",
+        "vtable": "0xDC769E8",
+        "index": 817
+      },
+      {
+        "slot": "0xDC7BC10",
+        "vtable": "0xDC7A368",
+        "index": 789
+      },
+      {
+        "slot": "0xDC8A038",
+        "vtable": "0xDC88710",
+        "index": 805
+      },
+      {
+        "slot": "0xE582658",
+        "vtable": "0xE57FC58",
+        "index": 1344
+      },
+      {
+        "slot": "0xE641418",
+        "vtable": "0xE63FB90",
+        "index": 785
+      },
+      {
+        "slot": "0xE643288",
+        "vtable": "0xE641A10",
+        "index": 783
+      },
+      {
+        "slot": "0xE6468F8",
+        "vtable": "0xE645038",
+        "index": 792
+      },
+      {
+        "slot": "0xE6A1098",
+        "vtable": "0xE69FB50",
+        "index": 681
+      },
+      {
+        "slot": "0xE738768",
+        "vtable": "0xE736DB8",
+        "index": 822
+      },
+      {
+        "slot": "0xE73B350",
+        "vtable": "0xE739A20",
+        "index": 806
+      },
+      {
+        "slot": "0xE73D0F0",
+        "vtable": "0xE73B690",
+        "index": 844
+      },
+      {
+        "slot": "0xE73FEB8",
+        "vtable": "0xE73E458",
+        "index": 844
+      },
+      {
+        "slot": "0xE743AD0",
+        "vtable": "0xE742028",
+        "index": 853
+      },
+      {
+        "slot": "0xE746058",
+        "vtable": "0xE744718",
+        "index": 808
+      },
+      {
+        "slot": "0xE74C1C0",
+        "vtable": "0xE74A768",
+        "index": 843
+      },
+      {
+        "slot": "0xE755918",
+        "vtable": "0xE753E30",
+        "index": 861
+      },
+      {
+        "slot": "0xE7577B0",
+        "vtable": "0xE755CC0",
+        "index": 862
+      },
+      {
+        "slot": "0xE75A560",
+        "vtable": "0xE758B08",
+        "index": 843
+      },
+      {
+        "slot": "0xE75C3E8",
+        "vtable": "0xE75A908",
+        "index": 860
+      },
+      {
+        "slot": "0xE75F208",
+        "vtable": "0xE75D768",
+        "index": 852
+      },
+      {
+        "slot": "0xE767DA8",
+        "vtable": "0xE766330",
+        "index": 847
+      },
+      {
+        "slot": "0xE76A150",
+        "vtable": "0xE7686D0",
+        "index": 848
+      },
+      {
+        "slot": "0xE76E668",
+        "vtable": "0xE76CBF0",
+        "index": 847
+      },
+      {
+        "slot": "0xE770900",
+        "vtable": "0xE76EF98",
+        "index": 813
+      },
+      {
+        "slot": "0xE772528",
+        "vtable": "0xE770C70",
+        "index": 791
+      },
+      {
+        "slot": "0xE774338",
+        "vtable": "0xE7728D8",
+        "index": 844
+      },
+      {
+        "slot": "0xE777050",
+        "vtable": "0xE7756F8",
+        "index": 811
+      },
+      {
+        "slot": "0xE778C48",
+        "vtable": "0xE7773C0",
+        "index": 785
+      },
+      {
+        "slot": "0xE781C58",
+        "vtable": "0xE7801D8",
+        "index": 848
+      },
+      {
+        "slot": "0xE785018",
+        "vtable": "0xE783768",
+        "index": 790
+      },
+      {
+        "slot": "0xE78D9A8",
+        "vtable": "0xE78C0D0",
+        "index": 795
+      },
+      {
+        "slot": "0xE78FFA8",
+        "vtable": "0xE78E4E0",
+        "index": 857
+      },
+      {
+        "slot": "0xE791CB8",
+        "vtable": "0xE790390",
+        "index": 805
+      },
+      {
+        "slot": "0xE794BB0",
+        "vtable": "0xE793208",
+        "index": 821
+      },
+      {
+        "slot": "0xE7968A8",
+        "vtable": "0xE794EF0",
+        "index": 823
+      },
+      {
+        "slot": "0xE798580",
+        "vtable": "0xE796BE8",
+        "index": 819
+      },
+      {
+        "slot": "0xE79F7B0",
+        "vtable": "0xE79DD48",
+        "index": 845
+      },
+      {
+        "slot": "0xE7A4148",
+        "vtable": "0xE7A26F0",
+        "index": 843
+      },
+      {
+        "slot": "0xE7A6788",
+        "vtable": "0xE7A4F00",
+        "index": 785
+      },
+      {
+        "slot": "0xE7A9170",
+        "vtable": "0xE7A7718",
+        "index": 843
+      },
+      {
+        "slot": "0xE7AAE40",
+        "vtable": "0xE7A9518",
+        "index": 805
+      },
+      {
+        "slot": "0xE7B5070",
+        "vtable": "0xE7B37D8",
+        "index": 787
+      },
+      {
+        "slot": "0xE7B6E08",
+        "vtable": "0xE7B53B0",
+        "index": 843
+      },
+      {
+        "slot": "0xE7B9C28",
+        "vtable": "0xE7B8160",
+        "index": 857
+      },
+      {
+        "slot": "0xE7BCAD0",
+        "vtable": "0xE7BB068",
+        "index": 845
+      },
+      {
+        "slot": "0xE7C0968",
+        "vtable": "0xE7BEEC0",
+        "index": 853
+      },
+      {
+        "slot": "0xE7C8970",
+        "vtable": "0xE7C6EE0",
+        "index": 850
+      },
+      {
+        "slot": "0xE7CC450",
+        "vtable": "0xE7CA9F8",
+        "index": 843
+      },
+      {
+        "slot": "0xE7CE250",
+        "vtable": "0xE7CC7F8",
+        "index": 843
+      },
+      {
+        "slot": "0xE7D1020",
+        "vtable": "0xE7CF5A8",
+        "index": 847
+      },
+      {
+        "slot": "0xE7D3E40",
+        "vtable": "0xE7D23E0",
+        "index": 844
+      },
+      {
+        "slot": "0xE85D718",
+        "vtable": "0xE85BC98",
+        "index": 848
+      }
+    ],
+    "idx843_entries": [
+      {
+        "slot": "0xE74C1C0",
+        "vtable": "0xE74A768",
+        "index": 843
+      },
+      {
+        "slot": "0xE75A560",
+        "vtable": "0xE758B08",
+        "index": 843
+      },
+      {
+        "slot": "0xE7A4148",
+        "vtable": "0xE7A26F0",
+        "index": 843
+      },
+      {
+        "slot": "0xE7A9170",
+        "vtable": "0xE7A7718",
+        "index": 843
+      },
+      {
+        "slot": "0xE7B6E08",
+        "vtable": "0xE7B53B0",
+        "index": 843
+      },
+      {
+        "slot": "0xE7CC450",
+        "vtable": "0xE7CA9F8",
+        "index": 843
+      },
+      {
+        "slot": "0xE7CE250",
+        "vtable": "0xE7CC7F8",
+        "index": 843
+      }
+    ]
+  },
+  "notes": {
+    "legacy_sig_failed": true,
+    "pure_move_stubs_found": false,
+    "vtable_index843_inherited": true,
+    "sdk_type": "百川 4.7.3 (非 UE4Dump)",
+    "anchor_style": "百川给的是全局指针变量地址(Gname 0xF6A6350/World 0xF6F5B34/Engine 0xF6F59CC), 与 UE4Dump 的 Offsets.hpp 锚点语义不同",
+    "driver_adapter": "挂 810 断点照旧; 坐标注入改写全局坐标对象, 不再改 s3/s4/s5 影子寄存器",
+    "verify_plan": [
+      "静置 5s hits=0",
+      "开枪 hits>0",
+      "写 0xF849E00 坐标看子弹转向"
+    ]
+  }
+}

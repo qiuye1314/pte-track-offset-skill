@@ -1,4 +1,4 @@
-# PTE 追踪偏移插件 v1.2.0
+# PTE 追踪偏移插件 v1.3.0
 
 把「PUBG Mobile 追踪偏移怎么抓」从玄学变成**一条命令可复现 + 可跨版本对撞**的插件。
 
@@ -182,6 +182,8 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 - export_baseline.py / diff_baseline.py / 不带 --patch 的 ue4_track_tool.py **全部只读**；只有显式 --patch 才回填 Offsets.h。
 - **不含已编译产物** fanpian_1.38.12（3.4MB 二进制，属构建产物，不是偏移资产）。
 - 偏移值绑定具体 so 指纹，换了 so 必须重抓 —— 这正是 C 节对撞流程的用途。
+
+
 ---
 
 ## 八、作者权衡利弊（Trade-offs & Design Decisions）
@@ -190,10 +192,10 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 
 | 决定 | 为什么这么选 | 付出的代价 |
 |---|---|---|
-| 抓偏移走「特征码 + 虚表反查」，不遍历 SDK 反射表 | SDK 的 60020 个函数 100% 是 `exec` 反射桩；追踪桩是原生 C++ 虚函数，反射表里根本不存在 | 每次大版本更新都要重扫重验，不能靠 dump 一劳永逸 |
+| 抓偏移走「特征码 + 虚表反查」，不遍历 SDK 反射表 | SDK 的 60020 个函数 100% 是 exec 反射桩；追踪桩是原生 C++ 虚函数，反射表里根本不存在 | 每次大版本更新都要重扫重验，不能靠 dump 一劳永逸 |
 | 特征码选「只命中 1~2 次」的稀有形状 | 3.3 亿字节 .text 里命中多 = 特征码太宽会误伤 | 版本一改桩被内联/改写，特征码可能失效，要回退虚表反查兜底 |
 | 用 PTE shadow 断点，不用 inline hook | 函数本来就在，只改影子寄存器，游戏读代码段做 CRC 校验时读到的是原版 | 依赖内核驱动（RT 615/617），部署门槛比 inline hook 高，root 环境才玩得转 |
-| 常驻只放 1499B 细线，全文按需展开 | 省 token、零重启，首句触发仍然可靠 | 细节展开要多一次 `pte_track_doc` 工具调用（换掉的是常驻 7778B） |
+| 常驻只放 1499B 细线，全文按需展开 | 省 token、零重启，首句触发仍然可靠 | 细节展开要多一次 pte_track_doc 工具调用（换掉的是常驻 7778B） |
 | 版本号五处统一、不玩小聪明 | package.json / dsh / plugin.json / skill.json / SKILL frontmatter 不一致会让装的人怀疑自己 | 改一行文档也得同步五处，维护动作多 |
 | 8 项语义错位只记录、不自动改 | 自动改可能把本来能用的版本弄坏；错位里有「跨类字段」这种假阳性 | 历史错位要人工消化，不能一条命令清零 |
 | 不含驱动交互代码、不含编译产物 | 仓库干净可审计，边界切在「偏移资产」与「构建/驱动侧」之间 | 拿到手不能开箱即用，驱动得自己接 |
@@ -205,10 +207,10 @@ Every choice below lists what was picked, why, and what it costs — this README
 
 | Decision | Why | What it costs |
 |---|---|---|
-| Locate offsets by byte-signature + vtable back-trace, not SDK reflection scan | All 60,020 dumped functions are `exec` reflection stubs; the track stub is a native C++ virtual function that never enters the reflection table | Every major update requires re-scanning; a dump alone is never sufficient |
-| Signature tuned to match only 1–2 hits | In a 330 MB `.text`, more hits means the signature is too loose and misfires | If a patch inlines/rewrites the stub, the signature dies; fall back to vtable back-trace |
+| Locate offsets by byte-signature + vtable back-trace, not SDK reflection scan | All 60,020 dumped functions are exec reflection stubs; the track stub is a native C++ virtual function that never enters the reflection table | Every major update requires re-scanning; a dump alone is never sufficient |
+| Signature tuned to match only 1–2 hits | In a 330 MB .text, more hits means the signature is too loose and misfires | If a patch inlines/rewrites the stub, the signature dies; fall back to vtable back-trace |
 | PTE shadow breakpoints instead of inline hooks | The function stays intact; only shadow registers are rewritten, so CRC checks of code pages read original bytes | Requires a kernel driver (RT 615/617); higher deployment bar than inline hooks, root needed |
-| Only a 1499-byte resident line; full docs on demand | Saves tokens, zero restart, first-line trigger stays reliable | Detail expansion costs one extra `pte_track_doc` call (instead of 7778 B always resident) |
+| Only a 1499-byte resident line; full docs on demand | Saves tokens, zero restart, first-line trigger stays reliable | Detail expansion costs one extra pte_track_doc call (instead of 7778 B always resident) |
 | Version pinned identically in five places | Inconsistent versions make users doubt the install | A one-line doc edit means syncing five files |
 | 8 semantic mismatches recorded, never auto-patched | Auto-patching may break builds that currently work; some "mismatches" are legit cross-class fields | Legacy mismatches need human triage, not one-command cleanup |
 | No driver-interaction code, no built binaries | Keeps the repo clean and auditable; boundary sits between offset assets and build/driver side | Not plug-and-play; you bring your own driver |
