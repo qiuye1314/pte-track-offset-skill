@@ -1,9 +1,36 @@
+
+---
+
+## ★ 第 0 步（最重要）：先判定源码属于哪个游戏
+
+**任何源码到手，先跑判定，再动一行代码。**
+
+```bash
+python3 scripts/detect_source_target.py <工程目录> [--so libUE4.so]
+```
+
+它输出：包名候选 / UWorld+矩阵偏移指纹 / 追踪函数归属 / 版本串 / fmov 桩在不在 / 建议写回组。
+
+**判错一次的代价是几小时乱试，判对只花 5 分钟。**
+
+| 包名 | 游戏 |
+|---|---|
+| com.tencent.tmgp.pubgmhd | 和平精英（国服） |
+| com.tencent.ig | PUBG MOBILE 国际服 |
+| com.tencent.igce | 国际服 IGCE 包 |
+| com.rekoo.pubgm | 台服 |
+| com.pubg.krmobile | 韩服 |
+| com.vng.pubgmobile | 越南服 |
+
+全文：`pte_track_doc(section="attrib")`
+
+**排查铁律：参数怎么调都不对时，先回头确认「游戏/版本判对了吗」，不要继续调参数。**
 ---
 name: pte-track-offset-mobile
 description: PUBG Mobile(和平精英) 追踪偏移(PTE shadow 子弹追踪)抓取与 SDK 反查方法论：从 libUE4.so 用特征码+虚表反查定位原生虚函数断点，用 UE4Dump SDK 交叉校验 build 一致性并校准全量字段偏移，一键流水线拉so→抓偏移→回填→NDK编译。当用户要「抓追踪偏移」「PTE追踪」「漏打追踪断点」「和平精英1.38偏移」「用SDK找偏移」「CalShoot地址」「kTrackShootFn」「子弹追踪怎么实现」或提到 com.tencent.tmgp.pubgmhd 追踪/断点/shadow/810/811/812 时使用。
 whenToUse: 用户要在一款 UE4 手游上抓「追踪类断点偏移」（原生虚函数，不在 SDK 反射表里）、要用现成 SDK 校准字段偏移、要把偏移抓取接进自动构建流水线、或问「SDK 能不能找到某个偏移」时。
 metadata:
-  version: 1.3.0
+  version: 1.5.0
   author: 老大
   upstream: PUBG Mobile 1.38.12 (com.tencent.tmgp.pubgmhd) 追踪外挂源码逆向 + UE4Dump SDK 对照
   dshHome: /root/.dsh/skills/pte-track-offset-mobile
@@ -304,4 +331,27 @@ v1.1.0 把结果落成 JSON，对撞交给脚本。
 - 偏移值**绑定 so 指纹**。换了 so 不重抓，就是把上一个版本的值当新的用。
 - 对撞器**只读**，不会替你写 Offsets.h。改完自己跑 build_gateway.sh 验证。
 - 别把 .bss 里的锚点读出 0 当 bug —— 那些静态槽是运行时才填的。
+---
+
+## 4.6 国际服（com.tencent.ig）已实战定版
+
+全文：`pte_track_doc(section="intl46")` 机器基线：`section="intl46_json"`
+
+| 项目 | 值 |
+|---|---|
+| 追踪断点 | `0x6FF841C`（STEShootWeaponProjectComponent.cpp，虚函数） |
+| 写回组 | **`s0/s1/s2`**（写 `s3/s4/s5` 无效） |
+| 骨骼 | Mesh 0x510 / Array 0xA30+0x30 / Count 0xA40 / stride 48 |
+| 矩阵 | UE4+0xF5F4370 再 +0x20 再 +0x270 |
+| UWorld | UE4+0xF621D90 再 +0x810 再 +0x78，列阵 +0x30 |
+| 自身 | +0x38 +0x78 +0x30 +0x28D8 |
+| 坐标 | +0x208 +0x1C8 |
+| 相机 | +0x4B50 +0x548 +0x520 +0x10 |
+
+**四条最容易翻车的：**
+
+1. 写回组选错，子弹打自己脚下。**先切组，再调参数。**
+2. 4.6 没有 fmov s2,s5 / s1,s4 / s0,s3 / ret 桩，别扫了。
+3. 驱动 fd 保持 -1（模块全局 hook ioctl），别自己开 socket 传 fd。
+4. 选靶半径用独立 300px，别借 NumIo[3]（70px），否则「候选 N / 可选 0」。
 

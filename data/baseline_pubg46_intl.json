@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "game": "PUBG MOBILE",
+  "region": "intl",
+  "package": "com.tencent.ig",
+  "version": "4.6",
+  "verified_at": "2026-10-26",
+  "verified_by": "lsrael漏打陀螺仪 -> 4.6 国际服移植，绘制+追踪全通",
+  "so": {
+    "size": 252290584,
+    "md5": "f12aadc1c2132677a3932a27e4736d2f"
+  },
+  "track": {
+    "offset": "0x6FF841C",
+    "class_file": "STEShootWeaponProjectComponent.cpp",
+    "entry_shape": "stp s0,s1 / stur s2 ; stp s3,s4 / stur s5",
+    "callers": "无直接 BL（虚函数）",
+    "write_group": [
+      0,
+      1,
+      2
+    ],
+    "write_group_names": [
+      "s0",
+      "s1",
+      "s2"
+    ],
+    "note": "4.6 国际服写 s0/s1/s2 有效；写 s3/s4/s5 无效（症状：打自己脚下/乱飞）",
+    "fmov_stub_present": false
+  },
+  "offsets": {
+    "uworld": {
+      "base": "0xF621D90",
+      "chain": [
+        "0x810",
+        "0x78"
+      ]
+    },
+    "actor_array": {
+      "object_array": "0x30",
+      "array": "0xA0",
+      "count": "0xA8"
+    },
+    "self_chain": [
+      "0x38",
+      "0x78",
+      "0x30",
+      "0x28D8"
+    ],
+    "matrix": {
+      "base": "0xF5F4370",
+      "chain": [
+        "0x20",
+        "0x270"
+      ]
+    },
+    "gname": {
+      "base": "0xF08F820",
+      "add": "0x110"
+    },
+    "position": {
+      "a": "0x208",
+      "b": "0x1C8"
+    },
+    "camera": {
+      "controller": "0x4B50",
+      "manager": "0x548",
+      "cache": "0x520",
+      "pov": "0x10",
+      "pov_rot": "0x0C",
+      "pov_fov": "0x24"
+    },
+    "bone": {
+      "mesh": "0x510",
+      "mesh_human": "0x210",
+      "array": "0xA30",
+      "array_add": "0x30",
+      "count": "0xA40",
+      "stride": 48
+    },
+    "actor": {
+      "team": "0x998",
+      "name": "0x960",
+      "is_bot": "0xA59",
+      "health": "0xE60",
+      "health_max": "0xE64",
+      "death": "0xE7C",
+      "firing": "0x1840",
+      "aiming": "0x1134",
+      "action": "0x1058",
+      "item_filter": "0x2B98",
+      "item_filter_old": "0x3A64"
+    }
+  },
+  "pitfalls": [
+    {
+      "id": "write_group",
+      "severity": "critical",
+      "symptom": "断点挂了、命中数涨、打不中人；偏移+3 变成打自己脚下",
+      "fix": "改写信 s0/s1/s2"
+    },
+    {
+      "id": "driver_fd",
+      "severity": "high",
+      "symptom": "驱动连不上",
+      "fix": "kernel.h 原版 fd=-1，模块全局 hook ioctl；不要自己 socket 再传 fd"
+    },
+    {
+      "id": "pick_radius",
+      "severity": "high",
+      "symptom": "候选 N 人 / 可选 0 人",
+      "fix": "用独立像素半径 300px，别借用 NumIo[3]=70"
+    },
+    {
+      "id": "paradise_fake_record",
+      "severity": "high",
+      "symptom": "读到的寄存器值永远是自己写的",
+      "fix": "挂点后不写 set_record，等真实记录 pc!=0"
+    },
+    {
+      "id": "ui_array_oob",
+      "severity": "critical",
+      "symptom": "进主菜单悬浮窗消失(SIGSEGV)",
+      "fix": "后端枚举当下标时扩数组并夹紧下标"
+    }
+  ]
+}

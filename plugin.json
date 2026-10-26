@@ -1,6 +1,6 @@
 {
   "name": "pte-track-offset-plugin",
-  "version": "1.3.0",
+  "version": "1.5.0",
   "kind": "dsh-plugin (skill+toolkit)",
   "title": "PTE 追踪偏移抓取与跨版本对撞",
   "author": "老大",
@@ -97,5 +97,18 @@
     "doctool_path_refs_missing": 0,
     "diff_tool_regressions": 3
   },
-  "changelog": "CHANGELOG.md"
+  "changelog": "CHANGELOG.md",
+  "baselineIntl46": {
+    "label": "PUBGM 4.6 国际服",
+    "package": "com.tencent.ig",
+    "so_size": 252290584,
+    "so_md5": "f12aadc1c2132677a3932a27e4736d2f",
+    "kTrackShootFn": "0x6FF841C",
+    "writeGroup": [
+      "s0",
+      "s1",
+      "s2"
+    ],
+    "verified": "2026-10-26 绘制+追踪全通"
+  }
 }

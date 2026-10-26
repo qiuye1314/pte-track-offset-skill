@@ -45,6 +45,10 @@ const SECTIONS = {
   pitfalls: "references/pitfalls.md",
   rt_pitfalls: "references/rt_pte_pitfalls_full.md",
   rt_success: "references/rt_pte_615_success.md",
+  attrib: "references/source_attribution.md",
+  detect: "scripts/detect_source_target.py",
+  intl46: "references/pubg46_intl_port_lessons.md",
+  intl46_json: "data/baseline_pubg46_intl.json",
   baseline: "data/PTE_BASELINE_1.38.12.md",
   baseline_json: "data/baseline_1.38.12.json",
   igce_baseline: "data/PTE_BASELINE_IGCE_4.7.3.md",
@@ -70,7 +74,7 @@ function makeDocTool() {
   return {
     name: "pte_track_doc",
     description:
-      "按需读取 PTE 追踪偏移插件全文（不常驻提示词）。section: index(完整作业索引,首选) | skill(主方法论) | baseline(1.38.12基线报告) | baseline_json(机器可读基线) | igce_baseline(IGCE 4.7.3实战报告) | igce_baseline_json(IGCE机器可读基线) | export(基线导出器源码) | diff(新赛季对撞器源码) | rt_pitfalls【必读RT驱动15坑】 | rt_success(615成功定版) | sop | sdk | pitfalls | script | grabber | align | fixtable | verify | pipeline | readme | changelog | plugin。",
+      "按需读取 PTE 追踪偏移插件全文（不常驻提示词）。section: index(完整作业索引,首选) | skill(主方法论) | baseline(1.38.12基线报告) | baseline_json(机器可读基线) | igce_baseline(IGCE 4.7.3实战报告) | igce_baseline_json(IGCE机器可读基线) | export(基线导出器源码) | diff(新赛季对撞器源码) | rt_pitfalls【必读RT驱动15坑】 | rt_success(615成功定版) | attrib【必读·判定源码属于哪个游戏】 | detect(判定脚本) | intl46【4.6国际服移植踩坑·写回组s0s1s2】 | intl46_json(4.6机器可读基线) | sop | sdk | pitfalls | script | grabber | align | fixtable | verify | pipeline | readme | changelog | plugin。",
     parameters: {
       type: "object",
       properties: {

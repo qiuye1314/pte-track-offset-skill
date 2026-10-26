@@ -1,4 +1,26 @@
-# PTE 追踪偏移抓取技能（插件版索引）
+# PTE 追踪偏移 · 完整作业索引
+
+## ★ 第 0 步（每次都先做）：判定源码属于哪个游戏
+
+```bash
+python3 scripts/detect_source_target.py <工程目录> [--so libUE4.so]
+```
+
+输出：包名候选 / UWorld+矩阵指纹 / 追踪函数归属 / 版本串 / fmov 桩 / 建议写回组。
+
+**判错一次浪费几小时，判对只花 5 分钟。**
+
+| 包名 | 游戏 | UWorld 锚点 | 追踪偏移 | 写回组 |
+|---|---|---|---|---|
+| com.tencent.tmgp.pubgmhd | 和平精英 | 0x1771CC38 | 0xA0FB548 | s3/s4/s5 |
+| com.tencent.ig | PUBG 4.6 国际服 | 0xF621D90 | 0x6FF841C | **s0/s1/s2** |
+| com.tencent.igce | 国际服 IGCE 4.7.3 | — | 0x06235980 | 不写寄存器 |
+
+全文：`pte_track_doc(section="attrib")`
+
+**铁律：参数调不通时，先回头确认游戏/版本判对了吗，别继续调参数。**
+
+---
 
 当用户提到「追踪偏移 / PTE追踪 / 漏打追踪 / 追踪断点 / kTrackShootFn / CalShoot / 子弹追踪怎么实现 /
 和平精英1.38偏移 / 用SDK找偏移 / 阴影断点 / shadow 810 811 812 / RT驱动 / 615 / 617」，
@@ -176,3 +198,55 @@ static_assert(sizeof(HOOK_STATUS) == 72, "HookStatus ABI");  // 用 static_asser
 3. PIE 里重定位项本身就是 0 → 找虚表起点必须排除重定位表
 4. 特征码失效 → 虚表第 843 槽兜底
 5. **别盲扫 ioctl 命令** → RT 驱动不校验参数，会让手机内核 oops 重启
+
+---
+
+## ★ 4.6 国际服移植（2026-10-26 实战定版）
+
+**全文：`pte_track_doc(section="intl46")`　机器基线：`section="intl46_json"`**
+
+四条最能省时间的结论：
+
+1. **4.6 国际服写回必须写 `s0/s1/s2`。** 写 `s3/s4/s5` 完全无效。
+   写错组的症状：**子弹往自己脚下打 / 乱飞 / "偏一米能中"**。
+   排查时先切组，再谈偏移，别一上来调参数。
+2. **4.6 没有国服那个 `fmov s2,s5 / s1,s4 / s0,s3 / ret` 桩。**
+   精确扫 + 宽松扫（三条 fmov + ret）命中数都是 0。别再扫了，换虚表/字符串反查。
+3. **驱动 `fd` 不要自己 socket。** `kernel.h` 原版 `fd` 恒为 `-1`，
+   模块全局 hook `ioctl`，不看 fd。自己开 socket 再传 fd 会被拒。
+4. **选靶半径别借用 `NumIo[3]`（70px）。** 用独立 300px。
+   「候选 N 人 / 可选 0 人」基本就是这个原因。
+
+### 4.6 追踪函数
+
+```
+偏移   0x6FF841C   (libUE4 +)
+类     STEShootWeaponProjectComponent.cpp
+入口   stp s0,s1 / stur s2 ; stp s3,s4 / stur s5
+调用   无直接 BL -> 虚函数
+```
+
+**地址校验法**：在函数体内找 `adrp+add` 拼出的 `__FILE__` 字符串，反查 UTF-8。
+比特征码可靠。
+
+### 写回（RT 615/617）
+
+```cpp
+PTE_HookSetRot cfg{};
+cfg.stack_rot[0] = 0; cfg.stack_rot[1] = FloatBits(x); cfg.stack_rot[2] = 1;
+cfg.stack_rot[3] = 1; cfg.stack_rot[4] = FloatBits(y); cfg.stack_rot[5] = 1;
+cfg.stack_rot[6] = 2; cfg.stack_rot[7] = FloatBits(z); cfg.stack_rot[8] = 1;
+cfg.stack_count = 9; cfg.rot[2] = 4;
+ioctl(fd, 617, &cfg);
+```
+
+### 一排坑（详见 intl46）
+
+| 坑 | 症状 | 修法 |
+|---|---|---|
+| 写回组错 | 打自己脚下 / 打不中 | 写 s0/s1/s2 |
+| 驱动 fd 自开 socket | 驱动连不上 | fd 保持 -1，靠全局 ioctl hook |
+| 选靶半径 70px | 候选 N / 可选 0 | 独立 300px |
+| Paradise 挂点后 set_record | 读到的永远是自己写的 | 等真实记录 pc!=0 |
+| 后端枚举当下标 | 进主菜单悬浮窗消失(SIGSEGV) | 扩数组 + 夹紧下标 |
+| Android.mk 丢失 | 编不过 | 手拉命令，见 intl46 第八节 |
