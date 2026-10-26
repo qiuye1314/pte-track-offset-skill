@@ -27,7 +27,7 @@
 | `com.rekoo.pubgm` | 台服（PubgMobile TW） |
 | `com.pubg.krmobile` | 韩服（Korea） |
 | `com.vng.pubgmobile` | 越南服 |
-| `com.tencent.igce` | 国际服 IGCE 包（常见于 4.7.3） |
+| `com.tencent.igce` | **体验服 = 国际服 IGCE 包**（与国际服同构，写回组同 s0/s1/s2） |
 
 **命令：**
 

@@ -19,7 +19,7 @@ import argparse
 
 PACKAGES = {
     "com.tencent.tmgp.pubgmhd": "和平精英 (国服)",
-    "com.tencent.igce":         "PUBG MOBILE 国际服 (IGCE 包, 常见 4.7.x)",
+    "com.tencent.igce":         "体验服 = 国际服 IGCE 包 (与国际服同构)",
     "com.tencent.ig":           "PUBG MOBILE 国际服",
     "com.rekoo.pubgm":          "台服",
     "com.pubg.krmobile":        "韩服",
@@ -43,7 +43,7 @@ MATRIX_FP = {
 TRACK_FP = {
     0x0A0FB548: ("和平精英 1.38", "fmov 返回值桩", "s3/s4/s5"),
     0x06FF841C: ("PUBG 4.6 国际服", "双 float3 参数函数", "s0/s1/s2"),
-    0x06235980: ("IGCE 4.7.3", "读全局坐标对象", "不写寄存器"),
+    0x06235980: ("体验服 IGCE 4.7.3 (与国际服同构)", "读全局坐标对象", "s0/s1/s2"),
 }
 
 FMOV_STUB = bytes.fromhex("a240201e8140201e6040201ec0035fd6")

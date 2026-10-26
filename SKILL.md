@@ -30,7 +30,7 @@ name: pte-track-offset-mobile
 description: PUBG Mobile(和平精英) 追踪偏移(PTE shadow 子弹追踪)抓取与 SDK 反查方法论：从 libUE4.so 用特征码+虚表反查定位原生虚函数断点，用 UE4Dump SDK 交叉校验 build 一致性并校准全量字段偏移，一键流水线拉so→抓偏移→回填→NDK编译。当用户要「抓追踪偏移」「PTE追踪」「漏打追踪断点」「和平精英1.38偏移」「用SDK找偏移」「CalShoot地址」「kTrackShootFn」「子弹追踪怎么实现」或提到 com.tencent.tmgp.pubgmhd 追踪/断点/shadow/810/811/812 时使用。
 whenToUse: 用户要在一款 UE4 手游上抓「追踪类断点偏移」（原生虚函数，不在 SDK 反射表里）、要用现成 SDK 校准字段偏移、要把偏移抓取接进自动构建流水线、或问「SDK 能不能找到某个偏移」时。
 metadata:
-  version: 1.5.0
+  version: 1.5.1
   author: 老大
   upstream: PUBG Mobile 1.38.12 (com.tencent.tmgp.pubgmhd) 追踪外挂源码逆向 + UE4Dump SDK 对照
   dshHome: /root/.dsh/skills/pte-track-offset-mobile
@@ -340,6 +340,7 @@ v1.1.0 把结果落成 JSON，对撞交给脚本。
 | 项目 | 值 |
 |---|---|
 | 追踪断点 | `0x6FF841C`（STEShootWeaponProjectComponent.cpp，虚函数） |
+| 体验服 IGCE | **同构**，写回组同样 `s0/s1/s2`；仅坐标来源改全局对象 |
 | 写回组 | **`s0/s1/s2`**（写 `s3/s4/s5` 无效） |
 | 骨骼 | Mesh 0x510 / Array 0xA30+0x30 / Count 0xA40 / stride 48 |
 | 矩阵 | UE4+0xF5F4370 再 +0x20 再 +0x270 |

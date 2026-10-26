@@ -1,6 +1,6 @@
 {
   "name": "pte-track-offset-plugin",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "kind": "dsh-plugin (skill+toolkit)",
   "title": "PTE 追踪偏移抓取与跨版本对撞",
   "author": "老大",

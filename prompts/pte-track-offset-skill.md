@@ -14,7 +14,7 @@ python3 scripts/detect_source_target.py <工程目录> [--so libUE4.so]
 |---|---|---|---|---|
 | com.tencent.tmgp.pubgmhd | 和平精英 | 0x1771CC38 | 0xA0FB548 | s3/s4/s5 |
 | com.tencent.ig | PUBG 4.6 国际服 | 0xF621D90 | 0x6FF841C | **s0/s1/s2** |
-| com.tencent.igce | 国际服 IGCE 4.7.3 | — | 0x06235980 | 不写寄存器 |
+| com.tencent.igce | 体验服=国际服 IGCE 4.7.3 | — | 0x06235980 | **s0/s1/s2**(同国际服) |
 
 全文：`pte_track_doc(section="attrib")`
 
@@ -216,6 +216,13 @@ static_assert(sizeof(HOOK_STATUS) == 72, "HookStatus ABI");  // 用 static_asser
    模块全局 hook `ioctl`，不看 fd。自己开 socket 再传 fd 会被拒。
 4. **选靶半径别借用 `NumIo[3]`（70px）。** 用独立 300px。
    「候选 N 人 / 可选 0 人」基本就是这个原因。
+
+### 体验服（IGCE / com.tencent.igce）
+
+**体验服与国际服同构。** 偏移体系、骨骼链、写回组全部按本文走：
+- 写回组：**s0/s1/s2**（与 4.6 国际服一致）
+- 只有「坐标来源」从寄存器改成全局对象（GOT → bss），那一项按 IGCE 基线单独取
+- 版本号不同（4.7.3），字段偏移按需重抓
 
 ### 4.6 追踪函数
 

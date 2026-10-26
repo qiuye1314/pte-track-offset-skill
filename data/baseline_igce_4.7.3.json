@@ -1090,5 +1090,17 @@
       "开枪 hits>0",
       "写 0xF849E00 坐标看子弹转向"
     ]
-  }
+  },
+  "family": "intl",
+  "family_note": "体验服 IGCE 与国际服 com.tencent.ig 同构; 写回组按国际服 s0/s1/s2",
+  "write_group": [
+    0,
+    1,
+    2
+  ],
+  "write_group_names": [
+    "s0",
+    "s1",
+    "s2"
+  ]
 }
