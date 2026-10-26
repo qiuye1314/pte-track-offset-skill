@@ -1,24 +1,37 @@
 # 变更记录
 
-## v1.5.4 - 2026-10-26 驱动对接与完整复盘补充
+## v1.6.1 - 2026-10-26 installed skill relinked + reader guide
 
-### 新增
+- ~/.dsh/skills/pte-track-offset-mobile 原为 1.2.0 独立副本(19 文件, 缺全部新文档), 改为软链到 plugin-src; 旧副本备份为 .bak-pte-stale-*
 
-- references/driver_swap_guide.md —— **驱动对接指南**：内存读写后端与 PTE 断点通道可以是两个不同驱动；
-  RT / Paradise 的 ABI 差异、7 步对接流程、三个硬约束（不改字段顺序 / 不自造 fd / 先探针后业务）、验证清单。
-- references/session_retro_2026_10_26.md —— **14 轮完整复盘**：最终配置、用户原话→判断→实际原因症状映射表、
-  完整尝试时间线、别重走清单。核心教训：所有症状都指向写回寄存器组，而断点/命中数/绘制全正常，极难反推。
+## v1.6.0 - 2026-10-26 shareable release: traces scrubbed
 
-### 更新
+- 删除本机运维字段: installedAt / skillAt / registration
+- SKILL.md dshHome 改占位符; README 安装对照表改占位符; CHANGELOG 脱敏
+- plugin.json name 与 package.json/index.js 对齐
+- verification 刷新(29 sections)
 
-- references/pubg46_intl_port_lessons.md 增加第十节「版本更新后的排查优先级」：
-  **地址类**（UWorld/矩阵/GName/坐标链/骨骼链/追踪偏移）几乎每次都变必须重抓；
-  **语义类**（写回组/参数含义/ABI 布局）通常不变，只有射击组件重构才变。
-  正确顺序：先重抓偏移 → 偏移对上仍不中 → 再反汇编看追踪函数形态。
-- plugin.json 新增 baselines 数组（1.38.12 / 4.6 国际服 / 4.7.3 体验服三条并列）。
-- skill.json 触发词扩容（国际服4.6 / com.tencent.ig / 写回组 / s0s1s2 / 源码归属判定）+ baselines 列表。
-- prompts/trigger.md 2300 → 2554 B；完整索引 11686 → 12216 B；SKILL.md 17787 → 18548 B。
-- README 重写：detect_source_target 前置说明、「另两条已定版基线」、目录表新增文件、换游戏改六处。
+## v1.5.8 - 2026-10-26 share-ready: install guide for other machines
+
+- README 新增「装到别人的机器」章节: 4 处本机专属路径 + 三步安装
+- 明确 bump_version.py 为唯一改版本方式
+
+## v1.5.7 - 2026-10-26 audit fixes + manifest auto-refresh
+
+- plugin.json injection.bytes 与 section 计数改为自动刷新(加入 bump 脚本)
+- scripts-install.sh 补 bump_version.py
+- 完整索引补 bump; 常驻触发段补 attrib/detect/driver/bump/retro
+
+## v1.5.6 - 2026-10-26 bump script + baselines unified
+
+- plugin.json baselines now 3 entries (IGCE added), duplicate baselineIntl46 removed; skill.json aligned; bump_version.py registered as section bump
+
+## v1.5.5 - 2026-10-26 驱动对接指南 + 版本脚本 + frontmatter 修复
+
+- 新增 references/driver_swap_guide.md（section driver）：RT/Paradise ABI 对照、7 步对接流程、fd 坑、验证清单
+- 新增 scripts/bump_version.py：一条命令同步 7 处版本号并插 CHANGELOG
+- 修复 SKILL.md frontmatter 被插到正文中间导致 DSH 发现失败
+- 修复 dsh.version / SKILL.md metadata.version 长期未同步（第三次出现）
 
 ## v1.5.1 - 2026-10-26 PUBG 4.6 国际服实战定版
 
@@ -97,7 +110,7 @@
   装了像没装 / 怀疑降智时先调它核对第一现场（对齐 laoda_profile 的约定）。
 
 ### 完整插件形态
-- 注册进 `/root/.dsh/profiles/web/package.json`：dependencies 加 link，bundles 追加
+- 注册进 本机 profile package.json：dependencies 加 link，bundles 追加
   `pte-track-offset-skill`（现为第 15 个 bundle）。
 - 建 `node_modules/pte-track-offset-skill` 软链（其余 14 个 bundle 都有，缺它会在加载时成为变数）。
 - 新增 `skill.json`（id / name / version / trigger / persona_file / badge），照 laoda 约定。

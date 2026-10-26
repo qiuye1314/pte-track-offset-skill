@@ -1,4 +1,13 @@
-
+---
+name: pte-track-offset-mobile
+description: PUBG Mobile(和平精英) 追踪偏移(PTE shadow 子弹追踪)抓取与 SDK 反查方法论：从 libUE4.so 用特征码+虚表反查定位原生虚函数断点，用 UE4Dump SDK 交叉校验 build 一致性并校准全量字段偏移，一键流水线拉so→抓偏移→回填→NDK编译。当用户要「抓追踪偏移」「PTE追踪」「漏打追踪断点」「和平精英1.38偏移」「用SDK找偏移」「CalShoot地址」「kTrackShootFn」「子弹追踪怎么实现」或提到 com.tencent.tmgp.pubgmhd 追踪/断点/shadow/810/811/812 时使用。
+whenToUse: 用户要在一款 UE4 手游上抓「追踪类断点偏移」（原生虚函数，不在 SDK 反射表里）、要用现成 SDK 校准字段偏移、要把偏移抓取接进自动构建流水线、或问「SDK 能不能找到某个偏移」时。
+metadata:
+  version: 1.6.1
+  author: 老大
+  upstream: PUBG Mobile 1.38.12 (com.tencent.tmgp.pubgmhd) 追踪外挂源码逆向 + UE4Dump SDK 对照
+  dshHome: <你的 ~/.dsh/skills/pte-track-offset-mobile>
+  artifacts: /sdcard/Download/pte_toolkit/
 ---
 
 ## ★ 第 0 步（最重要）：先判定源码属于哪个游戏
@@ -35,17 +44,6 @@ python3 scripts/detect_source_target.py <工程目录> [--so libUE4.so]
 **版本更新后改什么：** 改的是**偏移（地址类）**，写回组（语义类）通常不变。
 先重抓 UWorld/矩阵/坐标/骨骼/追踪偏移；只有反汇编发现追踪函数**入口形态变了**，
 才需要重新判定写回组。详见 `pte_track_doc(section="intl46")` 第十节。
----
-name: pte-track-offset-mobile
-description: PUBG Mobile(和平精英) 追踪偏移(PTE shadow 子弹追踪)抓取与 SDK 反查方法论：从 libUE4.so 用特征码+虚表反查定位原生虚函数断点，用 UE4Dump SDK 交叉校验 build 一致性并校准全量字段偏移，一键流水线拉so→抓偏移→回填→NDK编译。当用户要「抓追踪偏移」「PTE追踪」「漏打追踪断点」「和平精英1.38偏移」「用SDK找偏移」「CalShoot地址」「kTrackShootFn」「子弹追踪怎么实现」或提到 com.tencent.tmgp.pubgmhd 追踪/断点/shadow/810/811/812 时使用。
-whenToUse: 用户要在一款 UE4 手游上抓「追踪类断点偏移」（原生虚函数，不在 SDK 反射表里）、要用现成 SDK 校准字段偏移、要把偏移抓取接进自动构建流水线、或问「SDK 能不能找到某个偏移」时。
-metadata:
-  version: 1.5.4
-  author: 老大
-  upstream: PUBG Mobile 1.38.12 (com.tencent.tmgp.pubgmhd) 追踪外挂源码逆向 + UE4Dump SDK 对照
-  dshHome: /root/.dsh/skills/pte-track-offset-mobile
-  artifacts: /sdcard/Download/pte_toolkit/
----
 
 # PUBG Mobile 追踪偏移抓取技能（PTE Shadow 断点）
 

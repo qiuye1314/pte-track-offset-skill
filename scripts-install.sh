@@ -10,7 +10,7 @@ WORK=/sdcard/pte_work
 echo '=== 安装 PTE 追踪偏移工具链 v1.5.1 ==='
 mkdir -p "$WORK" /sdcard/Download/pte_toolkit
 
-for f in ue4_track_tool.py pte_track_find.py export_baseline.py diff_baseline.py sdk_offset_align.py offset_fix_table.py sdk_verify2.py build_gateway.sh detect_source_target.py; do
+for f in ue4_track_tool.py pte_track_find.py export_baseline.py diff_baseline.py sdk_offset_align.py offset_fix_table.py sdk_verify2.py build_gateway.sh detect_source_target.py bump_version.py; do
   if [ -f "$S/$f" ]; then cp "$S/$f" "$WORK/" && echo "  + $f"; fi
 done
 if [ -d "$DATA" ]; then

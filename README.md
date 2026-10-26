@@ -1,4 +1,4 @@
-# PTE 追踪偏移插件 v1.5.4
+# PTE 追踪偏移插件 v1.6.1
 
 把「PUBG Mobile 追踪偏移怎么抓」从玄学变成**一条命令可复现 + 可跨版本对撞**的插件。
 
@@ -6,11 +6,25 @@
 - 产物：追踪断点偏移 kTrackShootFn + 全量字段偏移基线（机器可读 JSON）
 - v1.1.0 关键增量：**机器可读基线 + 新赛季自动对撞器**
 - v1.2.0 关键增量：**完整插件形态 + 常驻极小（1499 字节）+ 全文按需展开，零重启**
-- v1.3.0 关键增量：**IGCE 4.7.3 实战基线**（kTrackShootFn 0x06235980，桩从搬影子寄存器改成读 GOT 全局坐标对象）
-- v1.4.0 关键增量：**PUBG 4.6 国际服实战定版**（0x6FF841C，写回组必须是 s0/s1/s2）
-- v1.5.0 关键增量：**源码归属判定前置**（detect_source_target.py，第 0 步先判包名/版本）
-- v1.5.1 关键增量：**体验服 IGCE 判定与国际服同构**（写回组同样 s0/s1/s2）
-- v1.5.4 关键增量：**驱动对接指南 + 14 轮完整复盘 + 地址类/语义类排查优先级**（换驱动要分两层换，更新后先抓偏移再看语义）
+
+---
+
+## 给接手的人 / AI 的指引
+
+**这是一份可直接读的插件包。** 不需要安装、不需要照抄路径，
+直接按下面的顺序读就能接手：
+
+| 顺序 | 文件 | 读它解决什么 |
+|---|---|---|
+| 1 | `SKILL.md` | 方法论主线（第 0 步判定归属 → 抓偏移 → 落地） |
+| 2 | `references/source_attribution.md` | **先判这份源码属于哪个游戏/版本**（别跳） |
+| 3 | `references/driver_swap_guide.md` | 驱动怎么对接（RT / Paradise / 用户态） |
+| 4 | `references/pubg46_intl_port_lessons.md` | 4.6 国际服具体怎么改（含写回组坑） |
+| 5 | `references/session_retro_2026_10_26.md` | 上一轮踩过的坑，别重走 |
+| 6 | `data/*.json` | 三条已验证基线，直接对撞 |
+| 7 | `scripts/` | 判定 / 抓偏移 / 导基线 / 改版本，都能直接跑 |
+
+**最省时间的一句：动手前先跑 `scripts/detect_source_target.py`。**
 
 ---
 
@@ -61,8 +75,7 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
                  或从 profiles/web/package.json 的 bundles 里移除该条目
 ```
 
-注册现状：已在 `/root/.dsh/profiles/web/package.json` 的 dependencies + bundles（第 15 个），
-`node_modules` 软链已建，`skill.json` 已提供（badge: PTE追踪偏移 v1.2.0）。
+注册方式见下文「装到别人的机器」。本包不包含任何本机路径。
 
 ## 一、当前基线（已实测验证）
 
@@ -99,6 +112,12 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 
 ## 二、目录
 
+> **改版本号只准用脚本**：`python3 scripts/bump_version.py 1.6.0`
+> 它同步 package.json（含 dsh.version）/ plugin.json / skill.json / index.js /
+> SKILL.md frontmatter，并插 CHANGELOG。`--check` 只检查不改。
+> 手工改必漏——本插件已经漏过 3 次（dsh.version、SKILL.md metadata.version）。
+
+
 > **第一步永远是判定源码归属**：`python3 scripts/detect_source_target.py <工程目录>`
 > 输出包名 / UWorld 指纹 / 追踪偏移 / 形态 → 直接给出**该写哪一组寄存器**。
 > 详见 `references/source_attribution.md`。判错版本 = 几小时乱试，判对 = 5 分钟。
@@ -123,6 +142,7 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 | data/baseline_igce_4.7.3.json | ★体验服 IGCE 4.7.3 基线（已标记 family=intl，写回组 s0/s1/s2） |
 | data/PTE_BASELINE_IGCE_4.7.3.md | 体验服人读版基线（顶部标明与国际服同构） |
 | data/baseline_pubg46_intl.json | ★新增：PUBG 4.6 国际服基线（偏移全表 + 4 条高危坑） |
+| scripts/bump_version.py | ★必用：改版本只准用它，一条命令同步 7 处 + 插 CHANGELOG |
 | references/driver_swap_guide.md | ★新增：**驱动对接指南**（RT/Paradise ABI 对照 / 7 步对接流程 / fd 坑 / 验证清单） |
 | references/session_retro_2026_10_26.md | ★新增：**完整复盘**（14 轮尝试时间线 / 症状映射表 / 别重走清单） |
 | references/source_attribution.md | ★新增：**源码归属判定**（包名表 / 偏移指纹 / 追踪形态） |
@@ -221,6 +241,8 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 
 另注：kMatchRealPlayerCount 判 OK，但相邻 4 字节处有 TotalPlayerNum，
 按「真人玩家数」语义建议手工再确认一次。
+
+---
 
 ---
 

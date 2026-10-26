@@ -22,7 +22,9 @@ SDK 交叉校验、全量字段偏移校准、跨赛季基线对撞。
 **需要全文时（不用重启）**：调工具 `pte_track_doc`，section 取
 index(完整作业索引) | skill(主方法论) | baseline(基线报告) | baseline_json(机器可读基线) |
 export(基线导出器) | diff(新赛季对撞器) | rt_pitfalls【必读15坑】 | rt_success |
-intl46【4.6国际服移植踩坑】 | intl46_json(4.6机器基线) | sop | sdk | pitfalls | script | readme | changelog
+intl46【4.6国际服移植踩坑】 | intl46_json(4.6机器基线) |
+attrib【判定源码归属】 | detect(判定脚本) | driver【驱动对接】 | bump(版本同步) |
+retro【完整复盘】 | sop | sdk | pitfalls | script | readme | changelog
 或直接加载技能：`skill("pte-track-offset-mobile")`
 
 **第 0 步永远先判定源码归属**：`python3 scripts/detect_source_target.py <工程目录>`

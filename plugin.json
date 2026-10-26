@@ -1,25 +1,15 @@
 {
-  "name": "pte-track-offset-plugin",
-  "version": "1.5.4",
+  "name": "pte-track-offset-skill",
+  "version": "1.6.1",
   "kind": "dsh-plugin (skill+toolkit)",
   "title": "PTE 追踪偏移抓取与跨版本对撞",
   "author": "老大",
-  "installedAt": "/root/.dsh/plugin-src/pte-track-offset-skill",
-  "skillAt": "/root/.dsh/skills/pte-track-offset-mobile",
-  "registration": {
-    "profile": "/root/.dsh/profiles/web/package.json",
-    "inDependencies": true,
-    "inBundles": true,
-    "bundleIndex": 15,
-    "nodeModulesLink": "node_modules/pte-track-offset-skill -> ../../../plugin-src/pte-track-offset-skill",
-    "patchReload": "startup（改动需重启 Harness 才进系统提示词）"
-  },
   "injection": {
     "resident": {
       "section": "pte-track-offset-skill:trigger",
       "order": 152,
       "always": true,
-      "bytes": 2300,
+      "bytes": 2684,
       "file": "prompts/trigger.md"
     },
     "optional": {
@@ -27,11 +17,11 @@
       "order": 153,
       "default": "off",
       "enableBy": "config.detail=true + 重启",
-      "bytes": 11686,
+      "bytes": 12307,
       "file": "prompts/pte-track-offset-skill.md"
     },
     "tools": [
-      "pte_track_doc (22 sections, 按需取全文)",
+      "pte_track_doc (29 sections, 按需取全文)",
       "pte_track_status (版本/注入)"
     ],
     "hardOff": "node_modules/pte-track-offset-skill.disabled 空文件，或从 bundles 移除"
@@ -92,26 +82,14 @@
   },
   "verification": {
     "node_check_index": "pass",
-    "mock_ctx_apply": "pass (两个分支 + 两个工具 + 未知 section 报错分支)",
+    "mock_ctx_apply": "pass (两个注入分支 + 两个工具 + 未知 section 报错分支)",
     "load_via_node_modules_link": "pass",
     "prompt_path_refs_missing": 0,
     "doctool_path_refs_missing": 0,
-    "diff_tool_regressions": 3
+    "diff_tool_regressions": 3,
+    "doctool_sections": 29
   },
   "changelog": "CHANGELOG.md",
-  "baselineIntl46": {
-    "label": "PUBGM 4.6 国际服",
-    "package": "com.tencent.ig",
-    "so_size": 252290584,
-    "so_md5": "f12aadc1c2132677a3932a27e4736d2f",
-    "kTrackShootFn": "0x6FF841C",
-    "writeGroup": [
-      "s0",
-      "s1",
-      "s2"
-    ],
-    "verified": "2026-10-26 绘制+追踪全通"
-  },
   "baselines": [
     {
       "label": "PUBGM 1.38.12",
@@ -147,17 +125,31 @@
       }
     },
     {
-      "label": "PUBGM 4.6 国际服",
-      "package": "com.tencent.ig",
-      "so_size": 252290584,
-      "so_md5": "f12aadc1c2132677a3932a27e4736d2f",
-      "kTrackShootFn": "0x6FF841C",
+      "label": "IGCE PUBG Mobile 4.7.3 (com.tencent.igce)",
+      "displayName": "体验服 IGCE 4.7.3 (与国际服同构)",
+      "package": "com.tencent.igce",
+      "kTrackShootFn": "0x06235980",
+      "soMd5": "0f7dda2d235b98cdd40d1b93c3746602",
+      "soSize": 258683048,
+      "family": "intl",
       "writeGroup": [
         "s0",
         "s1",
         "s2"
-      ],
-      "verified": "2026-10-26 绘制+追踪全通"
+      ]
+    },
+    {
+      "label": "PUBG MOBILE 4.6 国际服",
+      "package": "com.tencent.ig",
+      "kTrackShootFn": "0x6FF841C",
+      "soMd5": "f12aadc1c2132677a3932a27e4736d2f",
+      "soSize": 252290584,
+      "family": "intl",
+      "writeGroup": [
+        "s0",
+        "s1",
+        "s2"
+      ]
     }
   ]
 }

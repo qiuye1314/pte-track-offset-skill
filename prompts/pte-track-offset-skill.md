@@ -40,6 +40,7 @@ python3 scripts/detect_source_target.py <工程目录> [--so libUE4.so]
 - **机器可读基线(IGCE 4.7.3 / 体验服)**: __PLUGIN_DIR__/data/baseline_igce_4.7.3.json
 - **★基线(PUBG 4.6 国际服)**: __PLUGIN_DIR__/data/baseline_pubg46_intl.json
 - **★驱动对接指南(RT/Paradise/换驱动)**: __PLUGIN_DIR__/references/driver_swap_guide.md
+- **★版本同步脚本(改版本只准用它)**: __PLUGIN_DIR__/scripts/bump_version.py
 - **★完整复盘(14轮全错到打通)**: __PLUGIN_DIR__/references/session_retro_2026_10_26.md
 - **★源码归属判定**: __PLUGIN_DIR__/references/source_attribution.md
 - **★4.6 国际服移植实战**: __PLUGIN_DIR__/references/pubg46_intl_port_lessons.md
