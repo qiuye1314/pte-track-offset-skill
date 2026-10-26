@@ -10,7 +10,7 @@ import { dirname, join } from "node:path";
 //     需要时调 pte_track_doc(section="index") 取，零重启
 //   - config.detail = true 时才把完整索引也常驻注入（要重启才生效）
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PLUGIN_VERSION = "1.3.0";
+const PLUGIN_VERSION = "1.5.4";
 
 // DSH 的提示词插值引擎会把非内置变量的连续花括号当损坏引用抛出
 // "malformed prompt variable reference"，这里做无害化转义（与 laoda-hermes-dsha 同一手法）。
@@ -36,6 +36,10 @@ const BASELINE_IGCE = JSON.parse(
   readFileSync(join(__dirname, "data/baseline_igce_4.7.3.json"), "utf8")
 );
 
+const BASELINE_INTL46 = JSON.parse(
+  readFileSync(join(__dirname, "data/baseline_pubg46_intl.json"), "utf8")
+);
+
 const SECTIONS = {
   index: "prompts/pte-track-offset-skill.md",
   skill: "SKILL.md",
@@ -45,6 +49,8 @@ const SECTIONS = {
   pitfalls: "references/pitfalls.md",
   rt_pitfalls: "references/rt_pte_pitfalls_full.md",
   rt_success: "references/rt_pte_615_success.md",
+  retro: "references/session_retro_2026_10_26.md",
+  driver: "references/driver_swap_guide.md",
   attrib: "references/source_attribution.md",
   detect: "scripts/detect_source_target.py",
   intl46: "references/pubg46_intl_port_lessons.md",
@@ -74,7 +80,7 @@ function makeDocTool() {
   return {
     name: "pte_track_doc",
     description:
-      "按需读取 PTE 追踪偏移插件全文（不常驻提示词）。section: index(完整作业索引,首选) | skill(主方法论) | baseline(1.38.12基线报告) | baseline_json(机器可读基线) | igce_baseline(IGCE 4.7.3实战报告) | igce_baseline_json(IGCE机器可读基线) | export(基线导出器源码) | diff(新赛季对撞器源码) | rt_pitfalls【必读RT驱动15坑】 | rt_success(615成功定版) | attrib【必读·判定源码属于哪个游戏】 | detect(判定脚本) | intl46【4.6国际服移植踩坑·写回组s0s1s2】 | intl46_json(4.6机器可读基线) | sop | sdk | pitfalls | script | grabber | align | fixtable | verify | pipeline | readme | changelog | plugin。",
+      "按需读取 PTE 追踪偏移插件全文（不常驻提示词）。section: index(完整作业索引,首选) | skill(主方法论) | baseline(1.38.12基线报告) | baseline_json(机器可读基线) | igce_baseline(IGCE 4.7.3实战报告) | igce_baseline_json(IGCE机器可读基线) | export(基线导出器源码) | diff(新赛季对撞器源码) | rt_pitfalls【必读RT驱动15坑】 | rt_success(615成功定版) | driver【必读·驱动对接/换驱动:ABI对照+7步流程+fd坑】 | retro【必读·这次全错到打通的完整复盘+失败清单】 | attrib【必读·判定源码属于哪个游戏】 | detect(判定脚本) | intl46【4.6国际服移植踩坑·写回组s0s1s2】 | intl46_json(4.6机器可读基线) | sop | sdk | pitfalls | script | grabber | align | fixtable | verify | pipeline | readme | changelog | plugin。",
     parameters: {
       type: "object",
       properties: {
@@ -138,6 +144,16 @@ function makeStatusTool(cfg) {
             vtableIndexes: BASELINE_IGCE.primary && BASELINE_IGCE.primary.indexes,
             soMd5: BASELINE_IGCE.target && BASELINE_IGCE.target.md5,
             soSize: BASELINE_IGCE.target && BASELINE_IGCE.target.size,
+            family: BASELINE_IGCE.family || "intl",
+            writeGroup: (BASELINE_IGCE.write_group_names || ["s0","s1","s2"]).join("/"),
+          },
+          {
+            label: BASELINE_INTL46.game + " " + BASELINE_INTL46.version + " 国际服",
+            package: BASELINE_INTL46.package,
+            kTrackShootFn: BASELINE_INTL46.track && BASELINE_INTL46.track.offset,
+            writeGroup: (BASELINE_INTL46.track && BASELINE_INTL46.track.write_group_names || []).join("/"),
+            soMd5: BASELINE_INTL46.so && BASELINE_INTL46.so.md5,
+            soSize: BASELINE_INTL46.so && BASELINE_INTL46.so.size,
           },
         ],
         baseline: {

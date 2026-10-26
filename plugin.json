@@ -1,6 +1,6 @@
 {
   "name": "pte-track-offset-plugin",
-  "version": "1.5.1",
+  "version": "1.5.4",
   "kind": "dsh-plugin (skill+toolkit)",
   "title": "PTE 追踪偏移抓取与跨版本对撞",
   "author": "老大",
@@ -19,7 +19,7 @@
       "section": "pte-track-offset-skill:trigger",
       "order": 152,
       "always": true,
-      "bytes": 1499,
+      "bytes": 2300,
       "file": "prompts/trigger.md"
     },
     "optional": {
@@ -27,12 +27,12 @@
       "order": 153,
       "default": "off",
       "enableBy": "config.detail=true + 重启",
-      "bytes": 7778,
+      "bytes": 11686,
       "file": "prompts/pte-track-offset-skill.md"
     },
     "tools": [
-      "pte_track_doc (20 sections, 按需取全文)",
-      "pte_track_status (版本/注入/字节/基线自查)"
+      "pte_track_doc (22 sections, 按需取全文)",
+      "pte_track_status (版本/注入)"
     ],
     "hardOff": "node_modules/pte-track-offset-skill.disabled 空文件，或从 bundles 移除"
   },
@@ -80,7 +80,8 @@
     "export": "scripts/export_baseline.py",
     "diff": "scripts/diff_baseline.py",
     "pipeline": "scripts/build_gateway.sh",
-    "install": "scripts-install.sh"
+    "install": "scripts-install.sh",
+    "detect": "scripts/detect_source_target.py"
   },
   "readonly_by_default": true,
   "writes_project_files": false,
@@ -110,5 +111,53 @@
       "s2"
     ],
     "verified": "2026-10-26 绘制+追踪全通"
-  }
+  },
+  "baselines": [
+    {
+      "label": "PUBGM 1.38.12",
+      "versionName": "1.38.12",
+      "versionCode": 15910,
+      "so_size": 381387456,
+      "so_md5": "e33beba15fcc01ae0e589ffea2409ee0",
+      "text_lo": "0x8FDC960",
+      "text_hi": "0x13F128B8",
+      "kTrackShootFn": "0xA0FB548",
+      "signature": "a240201e8140201e6040201ec0035fd6",
+      "vtable_slots": [
+        "0x140F1938",
+        "0x1422E460",
+        "0x14436A20"
+      ],
+      "vtable_bases": [
+        "0x140EFEE0",
+        "0x1422CA08",
+        "0x14434FC8"
+      ],
+      "vtable_index": 843,
+      "vtable_refs": 3,
+      "direct_calls": 0,
+      "alt_stub": "0xBE33F44",
+      "sdk_anchor_match": "5/5",
+      "exported_constants": 77,
+      "calibration": {
+        "OK": 20,
+        "MOVE": 6,
+        "SUSPECT": 2,
+        "LOST": 0
+      }
+    },
+    {
+      "label": "PUBGM 4.6 国际服",
+      "package": "com.tencent.ig",
+      "so_size": 252290584,
+      "so_md5": "f12aadc1c2132677a3932a27e4736d2f",
+      "kTrackShootFn": "0x6FF841C",
+      "writeGroup": [
+        "s0",
+        "s1",
+        "s2"
+      ],
+      "verified": "2026-10-26 绘制+追踪全通"
+    }
+  ]
 }

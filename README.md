@@ -1,4 +1,4 @@
-# PTE 追踪偏移插件 v1.5.1
+# PTE 追踪偏移插件 v1.5.4
 
 把「PUBG Mobile 追踪偏移怎么抓」从玄学变成**一条命令可复现 + 可跨版本对撞**的插件。
 
@@ -8,12 +8,20 @@
 - v1.2.0 关键增量：**完整插件形态 + 常驻极小（1499 字节）+ 全文按需展开，零重启**
 - v1.3.0 关键增量：**IGCE 4.7.3 实战基线**（kTrackShootFn 0x06235980，桩从搬影子寄存器改成读 GOT 全局坐标对象）
 - v1.4.0 关键增量：**PUBG 4.6 国际服实战定版**（0x6FF841C，写回组必须是 s0/s1/s2）
-- v1.5.0 关键增量：**源码归属判定前置**（detect_source_target.py，第 0 步先判包名/版本再动手）+ 平台移植教训 + 来源归属说明
-- v1.5.1 关键增量：**体验服 IGCE 判定为与国际服同构**（写回组统一 s0/s1/s2，仅坐标来源改全局对象是 4.7.3 独有）
+- v1.5.0 关键增量：**源码归属判定前置**（detect_source_target.py，第 0 步先判包名/版本）
+- v1.5.1 关键增量：**体验服 IGCE 判定与国际服同构**（写回组同样 s0/s1/s2）
+- v1.5.4 关键增量：**驱动对接指南 + 14 轮完整复盘 + 地址类/语义类排查优先级**（换驱动要分两层换，更新后先抓偏移再看语义）
 
 ---
 
 ## 零、先记住的结论
+
+**0. 任何源码到手，先判定它属于哪个游戏/版本。**
+   `python3 scripts/detect_source_target.py <工程目录>`
+   输出包名 / UWorld 指纹 / 追踪偏移 / 形态 → 直接给出该写哪一组寄存器。
+   判错版本 = 几小时乱试，判对 = 5 分钟。
+
+
 
 **UE4Dump SDK 里找不到追踪偏移。**
 SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessEvent 跳板），
@@ -73,15 +81,34 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
     备选桩      0xBE33F44（index=191，1 处引用）
     SDK 锚点    5/5 一致
 
+### 另两条已定版基线
+
+    【PUBG 4.6 国际服】 com.tencent.ig
+      模块   libUE4.so  252,290,584 字节
+      MD5    f12aadc1c2132677a3932a27e4736d2f
+      kTrackShootFn = 0x6FF841C   （STEShootWeaponProjectComponent.cpp，虚函数）
+      写回组         = s0/s1/s2   ← 写 s3/s4/s5 无效，症状是打自己脚下/乱飞
+      形态           = 双 float3 参数函数（无 fmov 返回值桩）
+
+    【体验服 IGCE 4.7.3】 com.tencent.igce   —— 与国际服同构
+      kTrackShootFn = 0x06235980
+      写回组         = s0/s1/s2   （同国际服）
+      差异           = 坐标来源改成全局对象（GOT 0xf4ad458 → bss 0xF849E00）
+
 ---
 
 ## 二、目录
+
+> **第一步永远是判定源码归属**：`python3 scripts/detect_source_target.py <工程目录>`
+> 输出包名 / UWorld 指纹 / 追踪偏移 / 形态 → 直接给出**该写哪一组寄存器**。
+> 详见 `references/source_attribution.md`。判错版本 = 几小时乱试，判对 = 5 分钟。
+
 
 | 路径 | 用途 |
 |---|---|
 | SKILL.md | 方法论全文（四步法 + 15 个坑 + 排查表） |
 | plugin.json | 插件清单（版本 / 文件 / 入口） |
-| CHANGELOG.md | 1.0.0 → 1.1.0 变更 |
+| CHANGELOG.md | 1.0.0 → 1.5.1 变更 |
 | scripts/export_baseline.py | ★新增：导出机器可读基线 JSON |
 | scripts/diff_baseline.py | ★新增：新赛季 vs 基线 → 差异表 + 行动清单 |
 | scripts/ue4_track_tool.py | 追踪偏移抓取（特征码+虚表+SDK校验+可选回填） |
@@ -91,9 +118,21 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 | scripts/sdk_verify2.py | 指针链 / 世界链深度验证 |
 | scripts/build_gateway.sh | 一键流水线：拉so → 抓偏移 → 回填 → NDK 编译 |
 | scripts/scripts-install.sh | 装到 /sdcard/pte_work |
-| data/baseline_1.38.12.json | ★新增：1.38.12 基线（77 项常量 + 桩指纹 + 锚点） |
-| data/PTE_BASELINE_1.38.12.md | 人读版基线报告 |
-| references/ | 5 份拆解文档（抓取流程 / 坑集 / 615 成功记录 / SDK 用法 / 坑全表） |
+| data/baseline_1.38.12.json | 1.38.12 基线（77 项常量 + 桩指纹 + 锚点） |
+| data/PTE_BASELINE_1.38.12.md | 人读版基线报告（和平精英） |
+| data/baseline_igce_4.7.3.json | ★体验服 IGCE 4.7.3 基线（已标记 family=intl，写回组 s0/s1/s2） |
+| data/PTE_BASELINE_IGCE_4.7.3.md | 体验服人读版基线（顶部标明与国际服同构） |
+| data/baseline_pubg46_intl.json | ★新增：PUBG 4.6 国际服基线（偏移全表 + 4 条高危坑） |
+| references/driver_swap_guide.md | ★新增：**驱动对接指南**（RT/Paradise ABI 对照 / 7 步对接流程 / fd 坑 / 验证清单） |
+| references/session_retro_2026_10_26.md | ★新增：**完整复盘**（14 轮尝试时间线 / 症状映射表 / 别重走清单） |
+| references/source_attribution.md | ★新增：**源码归属判定**（包名表 / 偏移指纹 / 追踪形态） |
+| references/pubg46_intl_port_lessons.md | ★新增：4.6 国际服从绘制到追踪的移植实战（9 节） |
+| references/offset_grab_procedure.md | 抓取流程 |
+| references/pitfalls.md | 基础坑集 |
+| references/rt_pte_pitfalls_full.md | RT 驱动 15 坑全表 |
+| references/rt_pte_615_success.md | 615 成功定版记录 |
+| references/sdk_usage.md | SDK 用法 |
+| scripts/detect_source_target.py | ★新增：一条命令判定源码属于哪个游戏（包名+指纹+形态→写回组） |
 | prompts/trigger.md | ★v1.2.0 常驻细线（唯一每轮开销，1499 字节） |
 | prompts/pte-track-offset-skill.md | 158 行完整作业索引（按需，不常驻） |
 | skill.json | 技能清单（触发词 / badge），DSH 发现用 |
@@ -149,16 +188,21 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 
 ---
 
-## 五、换游戏要改的四处
+## 五、换游戏要改的**六处**（v1.5.1 扩写）
 
-    - 特征码      先反汇编已知桩确认形状（编译器 / 优化等级不同会变）
-    - SDK 路径    换成该游戏的 dump
-    - 锚点期望值  export_baseline.py 的 EXPECT_KEY + sdk_offset_align.py 的 REF 字典
-    - 包名模块名  com.tencent.tmgp.pubgmhd / libUE4.so → 目标游戏
+> 先跑 `python3 scripts/detect_source_target.py <工程目录>` 拿到判定，再按这张表逐项改。
+> **不要跳项**——跳一项的典型症状是「绘制正常但追踪不生效」。
 
-方法不变：**特征码扫 → 虚表反查 → SDK 校验 → 导出基线 → 对撞**。
+| # | 改什么 | 判据 | 漏改的症状 |
+|---|---|---|---|
+| 1 | **包名** | `grep com\.tencent src/` | 找进程失败 / 启动不起来 |
+| 2 | **UWorld 锚点 + 自身链** | 偏移指纹表 | 坐标恒为 0，绘制空 |
+| 3 | **矩阵锚点** | 矩阵指纹表 | 框错位 / 投影全偏 |
+| 4 | **坐标链**（`+A +B`） | 数据表 | 坐标跳动或落到地图原点 |
+| 5 | **骨骼链**（Mesh / Array / Count / stride） | 数据表 | 骨骼红绿参半或不画 |
+| 6 | **写回寄存器组** | 追踪形态表 | **子弹打自己脚下 / 乱飞 / 时中时不中** |
 
----
+**第 6 项最容易漏，也最难从症状反推。** 4.6 国际服 = `s0/s1/s2`，和平精英 = `s3/s4/s5`。
 
 ## 六、已知语义错位（1.38.12 工程历史遗留）
 

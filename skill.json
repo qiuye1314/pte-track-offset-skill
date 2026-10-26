@@ -1,7 +1,7 @@
 {
   "id": "pte-track-offset-skill",
   "name": "PTE追踪偏移抓取",
-  "version": "1.5.1",
+  "version": "1.5.4",
   "trigger": [
     "追踪偏移",
     "PTE追踪",
@@ -13,9 +13,19 @@
     "和平精英偏移",
     "虚表843",
     "615",
-    "617"
+    "617",
+    "国际服4.6",
+    "com.tencent.ig",
+    "写回组",
+    "s0s1s2",
+    "源码归属判定"
   ],
   "auto_apply": false,
   "persona_file": "prompts/trigger.md",
-  "badge": "PTE追踪偏移 v1.5.1"
+  "badge": "PTE追踪偏移 v1.5.4",
+  "baselines": [
+    "1.38.12(和平精英)",
+    "4.6(国际服)",
+    "4.7.3(体验服,同国际服)"
+  ]
 }

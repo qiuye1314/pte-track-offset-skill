@@ -6,7 +6,9 @@ SDK 交叉校验、全量字段偏移校准、跨赛季基线对撞。
 **触发词**：追踪偏移 / PTE追踪 / 漏打 / 追踪断点 / kTrackShootFn / CalShoot / 子弹追踪 /
 和平精英偏移 / shadow 810 811 812 / RT驱动 615 617 / 虚表 index 843 / com.tencent.tmgp.pubgmhd /
 国际服4.6 / com.tencent.ig / 打自己脚下 / 写回组 / s0s1s2 /
-判定源码归属 / 这是哪个游戏的源码 / 源码对应版本 / detect_source_target
+判定源码归属 / 这是哪个游戏的源码 / 源码对应版本 / detect_source_target /
+换基底 / 换源码 / 复盘 / 之前一直不对 /
+对接驱动 / 换驱动 / 驱动连不上 / RT 615 617 / Paradise ptebp / 驱动 fd
 
 **已验证基线（别重复扫描）**：PUBGM 1.38.12 → kTrackShootFn = 0xA0FB548，
 虚表 index 843×3，直接调用数 0，SDK 锚点 5/5，so md5 e33beba15fcc01ae0e589ffea2409ee0。
@@ -26,6 +28,7 @@ intl46【4.6国际服移植踩坑】 | intl46_json(4.6机器基线) | sop | sdk 
 **第 0 步永远先判定源码归属**：`python3 scripts/detect_source_target.py <工程目录>`
 （包名 + UWorld 指纹 + 追踪偏移 + fmov 桩 → 直接给出游戏和写回组）。
 判错版本的代价是几小时乱试，判对只花 5 分钟。
+版本更新后改的是**偏移**（地址类），写回组（语义类）通常不变——先重抓偏移。
 
 **一句话口诀**：SDK 里找不到追踪偏移（它只收反射桩）；追踪桩是原生虚函数，
 走「特征码扫 → 虚表反查 → 重建虚表边界 → SDK 校验」。

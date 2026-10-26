@@ -37,7 +37,13 @@ python3 scripts/detect_source_target.py <工程目录> [--so libUE4.so]
 - **基线报告(1.38.12实测)**: __PLUGIN_DIR__/data/PTE_BASELINE_1.38.12.md
 - **机器可读基线**: __PLUGIN_DIR__/data/baseline_1.38.12.json
 - **基线报告(IGCE 4.7.3实战)**: __PLUGIN_DIR__/data/PTE_BASELINE_IGCE_4.7.3.md
-- **机器可读基线(IGCE 4.7.3)**: __PLUGIN_DIR__/data/baseline_igce_4.7.3.json
+- **机器可读基线(IGCE 4.7.3 / 体验服)**: __PLUGIN_DIR__/data/baseline_igce_4.7.3.json
+- **★基线(PUBG 4.6 国际服)**: __PLUGIN_DIR__/data/baseline_pubg46_intl.json
+- **★驱动对接指南(RT/Paradise/换驱动)**: __PLUGIN_DIR__/references/driver_swap_guide.md
+- **★完整复盘(14轮全错到打通)**: __PLUGIN_DIR__/references/session_retro_2026_10_26.md
+- **★源码归属判定**: __PLUGIN_DIR__/references/source_attribution.md
+- **★4.6 国际服移植实战**: __PLUGIN_DIR__/references/pubg46_intl_port_lessons.md
+- **★判定脚本**: __PLUGIN_DIR__/scripts/detect_source_target.py
 - **基线导出器**: __PLUGIN_DIR__/scripts/export_baseline.py
 - **新赛季对撞器**: __PLUGIN_DIR__/scripts/diff_baseline.py
 - 偏移校准: __PLUGIN_DIR__/scripts/sdk_offset_align.py · offset_fix_table.py · sdk_verify2.py
