@@ -5,7 +5,7 @@
 - 目标：com.tencent.tmgp.pubgmhd（和平精英 / PUBGM），UE4 + libUE4.so
 - 产物：追踪断点偏移 kTrackShootFn + 全量字段偏移基线（机器可读 JSON）
 - v1.1.0 关键增量：**机器可读基线 + 新赛季自动对撞器**
-- v1.2.0 关键增量：**完整插件形态 + 常驻极小（1499 字节）+ 全文按需展开，零重启**
+- v1.2.0 关键增量：**完整插件形态 + 常驻极小（当时 1499 字节，v1.6.1 已增至 2684 字节）+ 全文按需展开，零重启**
 
 ---
 
@@ -55,21 +55,21 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 
 | 注入段 | order | 默认 | 字节 |
 |---|---|---|---|
-| `pte-track-offset-skill:trigger` | 152 | 永远注入 | **1499** |
-| `pte-track-offset-skill:full-index` | 153 | 关（`config.detail=false`） | 7778（开启才计） |
+| `pte-track-offset-skill:trigger` | 152 | 永远注入 | **2684** |
+| `pte-track-offset-skill:full-index` | 153 | 关（`config.detail=false`） | 12307（开启才计） |
 
 两个工具始终注册，不占提示词：
 
-- **`pte_track_doc`** —— 20 个 section 按需取全文。需要方法论/坑表/基线时调它，**不用重启**。
-  首选 `section="index"`（158 行完整作业索引）。
+- **`pte_track_doc`** —— 29 个 section 按需取全文。需要方法论/坑表/基线时调它，**不用重启**。
+  首选 `section="index"`（266 行完整作业索引）。
 - **`pte_track_status`** —— 回报版本、注入槽位、常驻字节数、基线摘要。
   「装了像没装」时先调它核对第一现场。
 
 开关三档：
 
 ```text
-① 默认（推荐）  : 常驻 1499B，全文按需     —— 现在就是这个状态
-② 全文常驻      : config.detail=true，重启生效，多占 7778B
+① 默认（推荐）  : 常驻 2684B，全文按需     —— 现在就是这个状态
+② 全文常驻      : config.detail=true，重启生效，多占 12307B
 ③ 彻底关掉      : node_modules/pte-track-offset-skill.disabled 放一个空文件
                  （与 ue4-esp-porting-skill / laoda-hermes-dsha 同一禁用机制）
                  或从 profiles/web/package.json 的 bundles 里移除该条目
@@ -127,7 +127,7 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 |---|---|
 | SKILL.md | 方法论全文（四步法 + 15 个坑 + 排查表） |
 | plugin.json | 插件清单（版本 / 文件 / 入口） |
-| CHANGELOG.md | 1.0.0 → 1.5.1 变更 |
+| CHANGELOG.md | 1.0.0 → 1.6.1 变更 |
 | scripts/export_baseline.py | ★新增：导出机器可读基线 JSON |
 | scripts/diff_baseline.py | ★新增：新赛季 vs 基线 → 差异表 + 行动清单 |
 | scripts/ue4_track_tool.py | 追踪偏移抓取（特征码+虚表+SDK校验+可选回填） |
@@ -141,20 +141,20 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 | data/PTE_BASELINE_1.38.12.md | 人读版基线报告（和平精英） |
 | data/baseline_igce_4.7.3.json | ★体验服 IGCE 4.7.3 基线（已标记 family=intl，写回组 s0/s1/s2） |
 | data/PTE_BASELINE_IGCE_4.7.3.md | 体验服人读版基线（顶部标明与国际服同构） |
-| data/baseline_pubg46_intl.json | ★新增：PUBG 4.6 国际服基线（偏移全表 + 4 条高危坑） |
+| data/baseline_pubg46_intl.json | ★新增：PUBG 4.6 国际服基线（偏移全表 + 4 条省时结论） |
 | scripts/bump_version.py | ★必用：改版本只准用它，一条命令同步 7 处 + 插 CHANGELOG |
 | references/driver_swap_guide.md | ★新增：**驱动对接指南**（RT/Paradise ABI 对照 / 7 步对接流程 / fd 坑 / 验证清单） |
 | references/session_retro_2026_10_26.md | ★新增：**完整复盘**（14 轮尝试时间线 / 症状映射表 / 别重走清单） |
 | references/source_attribution.md | ★新增：**源码归属判定**（包名表 / 偏移指纹 / 追踪形态） |
-| references/pubg46_intl_port_lessons.md | ★新增：4.6 国际服从绘制到追踪的移植实战（9 节） |
+| references/pubg46_intl_port_lessons.md | ★新增：4.6 国际服从绘制到追踪的移植实战（11 节，零~十） |
 | references/offset_grab_procedure.md | 抓取流程 |
 | references/pitfalls.md | 基础坑集 |
 | references/rt_pte_pitfalls_full.md | RT 驱动 15 坑全表 |
 | references/rt_pte_615_success.md | 615 成功定版记录 |
 | references/sdk_usage.md | SDK 用法 |
 | scripts/detect_source_target.py | ★新增：一条命令判定源码属于哪个游戏（包名+指纹+形态→写回组） |
-| prompts/trigger.md | ★v1.2.0 常驻细线（唯一每轮开销，1499 字节） |
-| prompts/pte-track-offset-skill.md | 158 行完整作业索引（按需，不常驻） |
+| prompts/trigger.md | ★常驻细线（唯一每轮开销，2684 字节） |
+| prompts/pte-track-offset-skill.md | 266 行完整作业索引（按需，不常驻） |
 | skill.json | 技能清单（触发词 / badge），DSH 发现用 |
 
 ---
@@ -248,7 +248,10 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 
 ## 七、边界（说清楚不做什么）
 
-- **不内置任何驱动交互代码**：断点命令（615/617）、HOOK_STATUS ABI 由使用者的 RT 驱动侧负责，参数约定见 references/rt_pte_615_success.md。
+- **不含驱动本体与内核模块**（.ko / 驱动二进制不在本仓库，需自行准备）。
+  但**驱动怎么接进来有完整指南**：615/617 断点命令、HOOK_STATUS ABI、RT / Paradise 两种 ABI 对照、
+  7 步对接流程、ioctl 示例、双后端切换骨架 → `references/driver_swap_guide.md`；
+  615/617 成功定版参数约定 → `references/rt_pte_615_success.md`。
 - export_baseline.py / diff_baseline.py / 不带 --patch 的 ue4_track_tool.py **全部只读**；只有显式 --patch 才回填 Offsets.h。
 - **不含已编译产物** fanpian_1.38.12（3.4MB 二进制，属构建产物，不是偏移资产）。
 - 偏移值绑定具体 so 指纹，换了 so 必须重抓 —— 这正是 C 节对撞流程的用途。
@@ -265,11 +268,11 @@ SDK 收录的 60020 个函数 100% 是 "exec" 反射桩（UFunction 的 ProcessE
 | 抓偏移走「特征码 + 虚表反查」，不遍历 SDK 反射表 | SDK 的 60020 个函数 100% 是 exec 反射桩；追踪桩是原生 C++ 虚函数，反射表里根本不存在 | 每次大版本更新都要重扫重验，不能靠 dump 一劳永逸 |
 | 特征码选「只命中 1~2 次」的稀有形状 | 3.3 亿字节 .text 里命中多 = 特征码太宽会误伤 | 版本一改桩被内联/改写，特征码可能失效，要回退虚表反查兜底 |
 | 用 PTE shadow 断点，不用 inline hook | 函数本来就在，只改影子寄存器，游戏读代码段做 CRC 校验时读到的是原版 | 依赖内核驱动（RT 615/617），部署门槛比 inline hook 高，root 环境才玩得转 |
-| 常驻只放 1499B 细线，全文按需展开 | 省 token、零重启，首句触发仍然可靠 | 细节展开要多一次 pte_track_doc 工具调用（换掉的是常驻 7778B） |
+| 常驻只放 2684B 细线，全文按需展开 | 省 token、零重启，首句触发仍然可靠 | 细节展开要多一次 pte_track_doc 工具调用（换掉的是常驻 12307B） |
 | 版本号五处统一、不玩小聪明 | package.json / dsh / plugin.json / skill.json / SKILL frontmatter 不一致会让装的人怀疑自己 | 改一行文档也得同步五处，维护动作多 |
 | 8 项语义错位只记录、不自动改 | 自动改可能把本来能用的版本弄坏；错位里有「跨类字段」这种假阳性 | 历史错位要人工消化，不能一条命令清零 |
-| 不含驱动交互代码、不含编译产物 | 仓库干净可审计，边界切在「偏移资产」与「构建/驱动侧」之间 | 拿到手不能开箱即用，驱动得自己接 |
-| 拆 7 个脚本而不是一个大黑盒 | 每步可单独跑、单独验（抓 → 导出 → 对撞 → 回填 → 编译） | 命令数量多，初次上手要读用法 |
+| 不含驱动本体（.ko/驱动二进制）与编译产物，但**给完整驱动对接指南**（ABI 对照 / 7 步流程 / ioctl 示例 / 双后端骨架） | 仓库干净可审计，边界切在「偏移资产 + 对接方法」与「驱动本体」之间 | 仍不能开箱即用，驱动本体需自行准备 |
+| 拆 10 个脚本而不是一个大黑盒 | 每步可单独跑、单独验（抓 → 导出 → 对撞 → 回填 → 编译） | 命令数量多，初次上手要读用法 |
 
 ### Trade-offs (English)
 
@@ -280,8 +283,8 @@ Every choice below lists what was picked, why, and what it costs — this README
 | Locate offsets by byte-signature + vtable back-trace, not SDK reflection scan | All 60,020 dumped functions are exec reflection stubs; the track stub is a native C++ virtual function that never enters the reflection table | Every major update requires re-scanning; a dump alone is never sufficient |
 | Signature tuned to match only 1–2 hits | In a 330 MB .text, more hits means the signature is too loose and misfires | If a patch inlines/rewrites the stub, the signature dies; fall back to vtable back-trace |
 | PTE shadow breakpoints instead of inline hooks | The function stays intact; only shadow registers are rewritten, so CRC checks of code pages read original bytes | Requires a kernel driver (RT 615/617); higher deployment bar than inline hooks, root needed |
-| Only a 1499-byte resident line; full docs on demand | Saves tokens, zero restart, first-line trigger stays reliable | Detail expansion costs one extra pte_track_doc call (instead of 7778 B always resident) |
+| Only a 2684-byte resident line; full docs on demand | Saves tokens, zero restart, first-line trigger stays reliable | Detail expansion costs one extra pte_track_doc call (instead of 12307 B always resident) |
 | Version pinned identically in five places | Inconsistent versions make users doubt the install | A one-line doc edit means syncing five files |
 | 8 semantic mismatches recorded, never auto-patched | Auto-patching may break builds that currently work; some "mismatches" are legit cross-class fields | Legacy mismatches need human triage, not one-command cleanup |
-| No driver-interaction code, no built binaries | Keeps the repo clean and auditable; boundary sits between offset assets and build/driver side | Not plug-and-play; you bring your own driver |
-| Seven focused scripts instead of one black box | Each step runs and verifies independently (grab → export → diff → patch → build) | More commands to learn on first setup |
+| No driver binary (.ko) and no build artifacts — but ships a full driver-integration guide (ABI comparison / 7-step flow / ioctl samples / dual-backend skeleton) | Keeps the repo clean and auditable; boundary sits between offset assets plus integration know-how and the driver itself | Still not plug-and-play; you supply the driver binary |
+| Ten focused scripts instead of one black box | Each step runs and verifies independently (grab → export → diff → patch → build) | More commands to learn on first setup |
